@@ -1,7 +1,7 @@
-# Speed Researcher
+# Speedy Researcher
 
 Displays one word at a time from a pdf, with text line positioning at the top
-![gui_image](https://github.com/qubies/speedy_researcher/blob/master/images/running_screen.png "Speedy Researcher In Action")
+![gui_image](https://raw.githubusercontent.com/qubies/speedy_researcher/master/images/running_screen.png "Speedy Researcher In Action")
 
 # Dependancies
 * pyqt5 `apt-get install python3-pyqt5`
