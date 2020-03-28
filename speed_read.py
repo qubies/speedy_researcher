@@ -21,13 +21,15 @@ class update(threading.Thread):
         threading.Thread.__init__(self)
         self.shutdown_flag = threading.Event()
     
-    def highlight_string(self, text, pos):
-        pre=" ".join(text[:pos])
-        post=" ".join(text[pos+1:])
-        current=text[pos]
+    def highlight_string(self, current_text, pos):
+        pre=" ".join(current_text[:pos])
+        post=" ".join(current_text[pos+1:])
+        current=current_text[pos]
         surround_style = "font-size:12pt; color:#666;"
+        prior_style = "font-size:12pt; color:#DDD;"
         current_style = "font-size:15pt; color:#D00;"
-        return f"<span style='{surround_style}'>{pre}</span><span style='{current_style}'> {current} </span><span style='{surround_style}'>{post}</span>"
+        prior_lines = "<br>".join([line.decode('utf-8') for line in text[line_position-3:line_position]])
+        return f"<span style='{prior_style}'>{prior_lines}<br></span><span style='{surround_style}'>{pre}</span><span style='{current_style}'> {current} </span><span style='{surround_style}'>{post}</span>"
 
 
     def run(self):
