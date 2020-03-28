@@ -3,9 +3,9 @@
 Displays one word at a time from a pdf, with text line positioning at the top
 
 # Dependancies
-* pyqt5
+* pyqt5 `apt-get install python3-pyqt5`
 * textract
-* pynput
+* pynput `pip3 install --user textract pynput`
 
 ## Controls
 * Up Arrow -> increase speed
@@ -16,7 +16,7 @@ Displays one word at a time from a pdf, with text line positioning at the top
 
 ### CLI Options
 ```
-usage: speed_read.py [-h] [--speed SPEED] [--increment INCREMENT]
+usage: speedy_researcher.py [-h] [--speed SPEED] [--increment INCREMENT]
                      [--font_size FONT_SIZE] [--comma_pause COMMA_PAUSE]
                      [--period_pause PERIOD_PAUSE]
                      [--letter_boost LETTER_BOOST] [--uncommon UNCOMMON]
