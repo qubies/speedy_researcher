@@ -6,27 +6,29 @@ from PyQt5.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 
-## DEFAULTS
-speed = 0.3
-increment = 0.05
-font_size = 60
-show_punctuation = True
-comma_pause = 1
-period_pause = 2
-max_speed = 1000 # words per minute
-min_speed = 30 # words per minute
-
-## state
+## STATE
 line_position = 0
 running_threads = []
 space_state = False
 pause_time = 0.3
 
+# LIMITS
+max_speed = 1000 # words per minute
+min_speed = 30 # words per minute
 class update(threading.Thread):
 
     def __init__(self):
         threading.Thread.__init__(self)
         self.shutdown_flag = threading.Event()
+    
+    def highlight_string(self, text, pos):
+        pre=" ".join(text[:pos])
+        post=" ".join(text[pos+1:])
+        current=text[pos]
+        surround_style = "font-size:12pt; color:#666;"
+        current_style = "font-size:15pt; color:#D00;"
+        return f"<span style='{surround_style}'>{pre}</span><span style='{current_style}'> {current} </span><span style='{surround_style}'>{post}</span>"
+
 
     def run(self):
 
@@ -35,28 +37,34 @@ class update(threading.Thread):
             global mw
             global line_position
             global space_state
-
             while line_position < len(text):
-                for word in text[line_position].split():
+                lp = line_position
+                words = text[line_position].decode('utf-8').split()
+                for i, word in enumerate(words):
+                    mw.upcomming.setText(self.highlight_string(words, i))
+                    if lp != line_position: break
                     if self.shutdown_flag.is_set(): 
                         print('Thread #%s stopped' % self.ident)
                         return
-                    if show_punctuation:
-                        w = word.decode()
-                    else:
-                        w = word.decode().rstrip(string.punctuation)
-                    mw.label.setText(w)
-                    time.sleep(pause_time)
+                    if not show_punctuation:
+                        word = word.strip(string.punctuation)
+
+                    mw.read.setText(word)
 
                     while space_state and not self.shutdown_flag.is_set():
-                        mw.label.setText("PAUSED")
+                        mw.read.setText("PAUSED")
                         time.sleep(0.5)
-                    
-                    if b',' in word:
+
+                    sys.stdout.flush()
+                    time.sleep(letter_boost*len(word))
+                    if ',' in word:
                         time.sleep(pause_time*comma_pause)
-                    elif b'.' in word:
+                    elif '.' in word:
                         time.sleep(pause_time*period_pause)
-                line_position+=1
+                    else:
+                        time.sleep(pause_time)
+                else:
+                    line_position+=1
 
 
 
@@ -74,13 +82,25 @@ def service_shutdown(signum, frame):
 class MainWindow(QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
-        self.setStyleSheet("QLabel {font: "+str(font_size)+"pt}")
-        self.layout = QVBoxLayout()
-        self.label = QLabel("")
-        self.label.setAlignment(Qt.AlignCenter)
+        #  self.setStyleSheet("QLabel {font: "+str(font_size)+"pt}")
+        upcomming_font = QtGui.QFont("Times", 14, QtGui.QFont.Bold)
+        read_font = QtGui.QFont("Times", font_size, QtGui.QFont.Bold)
 
-        self.layout.addWidget(self.label)
+        self.layout = QVBoxLayout()
+        self.upcomming = QLabel("hat")
+        self.upcomming.setFont(upcomming_font)
+        self.upcomming.setTextFormat(Qt.RichText)
+        self.upcomming.setWordWrap(True);
+        self.upcomming.setText("")
+        self.upcomming.setAlignment(Qt.AlignHCenter)
+
+        self.read = QLabel("LINE")
+        self.read.setAlignment(Qt.AlignHCenter)
+        self.read.setFont(read_font)
+
         self.setWindowTitle("Speed Reader")
+        self.layout.addWidget(self.upcomming)
+        self.layout.addWidget(self.read)
         self.setLayout(self.layout)
 
 
@@ -100,6 +120,8 @@ def on_press(key):
             space_state = not space_state
         elif key == key.left:
             line_position -= 1
+        elif key == key.right:
+            line_position += 1
         pause_time = wpm_to_seconds(speed)
             
     except Exception as e:
@@ -117,16 +139,18 @@ def set_args():
     global comma_pause# = 1
     global period_pause # = 2
     global pause_time
+    global letter_boost
 
     parser=argparse.ArgumentParser()
     parser.add_argument("file_name")
 
     ## options
-    parser.add_argument('--speed', type=int, default=180, help='The base speed for the reader in words per minute -- default=180')
+    parser.add_argument('--speed', type=int, default=250, help='The base speed for the reader in words per minute -- default=180')
     parser.add_argument('--increment', type=int, default=2, help='The increment increase in words per minute -- default=2')
     parser.add_argument('--font_size', type=int, default=48, help='The font size -- default=48')
     parser.add_argument('--comma_pause', type=int, default=1, help='The amount of time to pause for a comma after a word -- default=1')
     parser.add_argument('--period_pause', type=int, default=2, help='The amount of time to pause for a period after a word -- default=2')
+    parser.add_argument('--letter_boost', type=float, default=0.02, help='The amount of time to increase the pause for each letter in a word -- default=0.02')
     parser.add_argument('--hide_punctuation', help="Remove trailing punctuation from words displayed", action='store_true')
 
     args = parser.parse_args()
@@ -139,6 +163,7 @@ def set_args():
     comma_pause = args.comma_pause
     period_pause = args.period_pause
     show_punctuation = not args.hide_punctuation
+    letter_boost = args.letter_boost
 
 signal.signal(signal.SIGTERM, service_shutdown)
 signal.signal(signal.SIGINT, service_shutdown)
