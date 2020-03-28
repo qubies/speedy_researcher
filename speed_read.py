@@ -5,7 +5,7 @@ import time
 import threading
 import signal
 import string
-import textract as t
+import textract
 from pynput.keyboard import Key, Listener
 from PyQt5.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -18,9 +18,18 @@ space_state = False
 pause_time = 0.3
 
 # LIMITS
-max_speed = 1000  # words per minute
+max_speed = 2000  # words per minute
 min_speed = 30  # words per minute
 
+common_words=set()
+
+# read in the word frequency file
+for line in open("english_word_frequencies.txt"):
+    common_words.add(line.split()[0])
+
+def is_common(word):
+    word = word.strip(string.punctuation).lower()
+    return word in common_words
 
 class update(threading.Thread):
 
@@ -29,6 +38,9 @@ class update(threading.Thread):
         self.shutdown_flag = threading.Event()
 
     def highlight_string(self, current_text, pos):
+        '''
+        presents the document text, highlighting the current word in red
+        '''
         pre = " ".join(current_text[:pos])
         post = " ".join(current_text[pos+1:])
         current = current_text[pos]
@@ -72,11 +84,17 @@ class update(threading.Thread):
                         time.sleep(pause_time*period_pause)
                     else:
                         time.sleep(pause_time)
+                    if not is_common(word):
+                        print(f"Uncommon: '{word}'")
+                        time.sleep(uncommon)
                 else:
                     line_position += 1
 
 
 class ServiceExit(Exception):
+    '''
+    cleaner on close
+    '''
     def __init__(self, *args):
         for instance in args:
             print("Instance Closing", instance)
@@ -84,13 +102,16 @@ class ServiceExit(Exception):
 
 
 def service_shutdown(signum, frame):
+    '''
+    signal handle
+    '''
     raise ServiceExit(*running_threads)
 
 
 class MainWindow(QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
-        #  self.setStyleSheet("QLabel {font: "+str(font_size)+"pt}")
+        ## gui layout options
         upcomming_font = QtGui.QFont("Times", 14, QtGui.QFont.Bold)
         read_font = QtGui.QFont("Times", font_size, QtGui.QFont.Bold)
 
@@ -113,6 +134,9 @@ class MainWindow(QWidget):
 
 
 def on_press(key):
+    '''
+    keypress handlers
+    '''
     try:
         global speed
         global increment
@@ -132,7 +156,7 @@ def on_press(key):
             line_position += 1
         pause_time = wpm_to_seconds(speed)
 
-    except Exception as e:
+    except AttributeError:
         return
 
 
@@ -150,6 +174,7 @@ def set_args():
     global period_pause  # = 2
     global pause_time
     global letter_boost
+    global uncommon
 
     parser = argparse.ArgumentParser()
     parser.add_argument("file_name")
@@ -165,8 +190,10 @@ def set_args():
                         help='The amount of time to pause for a comma after a word -- default=1')
     parser.add_argument('--period_pause', type=int, default=2,
                         help='The amount of time to pause for a period after a word -- default=2')
-    parser.add_argument('--letter_boost', type=float, default=0.02,
-                        help='The amount of time to increase the pause for each letter in a word -- default=0.02')
+    parser.add_argument('--letter_boost', type=float, default=0.01,
+                        help='The amount of time to increase the pause for each letter in a word -- default=0.01')
+    parser.add_argument('--uncommon', type=float, default=0.2,
+                        help='The amount of time to increase the pause for each uncommon word -- default=0.2')
     parser.add_argument(
         '--hide_punctuation', help="Remove trailing punctuation from words displayed", action='store_true')
 
@@ -181,13 +208,14 @@ def set_args():
     period_pause = args.period_pause
     show_punctuation = not args.hide_punctuation
     letter_boost = args.letter_boost
+    uncommon = args.uncommon
 
 
 signal.signal(signal.SIGTERM, service_shutdown)
 signal.signal(signal.SIGINT, service_shutdown)
 
 set_args()
-text = t.process(file_name).splitlines()
+text = textract.process(file_name).splitlines()
 app = QApplication(list(sys.argv[0]))
 mw = MainWindow()
 mw.show()
