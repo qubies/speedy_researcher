@@ -2,6 +2,11 @@
 
 Displays one word at a time from a pdf, with text line positioning at the top
 
+# Dependancies
+* pyqt5
+* textract
+* pynput
+
 ## Controls
 * Up Arrow -> increase speed
 * Down Arrow -> decrease speed
