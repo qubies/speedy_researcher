@@ -7,10 +7,12 @@ import signal
 import string
 import textract
 import os
-from pynput.keyboard import Key, Listener
-from PyQt5.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget, QMessageBox
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
+run = True
+
+signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 # STATE
 running_threads = []
@@ -19,12 +21,11 @@ space_state = False
 pause_time = 0.3
 
 # LIMITS
-max_speed = 2000  # words per minute
+max_speed = 20000  # words per minute
 min_speed = 30  # words per minute
 
 common_words=set()
 mode='txt'
-
 # read in the word frequency file
 for line in open("data/english_word_frequencies.txt"):
     common_words.add(line.split()[0])
@@ -39,7 +40,6 @@ class update(threading.Thread):
 
     def __init__(self):
         threading.Thread.__init__(self)
-        self.shutdown_flag = threading.Event()
 
     def highlight_string(self, current_text, pos):
         '''
@@ -59,65 +59,48 @@ class update(threading.Thread):
         return f"<span style='{prior_style}'>{prior_lines}<br></span><span style='{surround_style}'>{pre}</span><span style='{current_style}'> {current} </span><span style='{surround_style}'>{post}</span>"
 
     def run(self):
-        while not self.shutdown_flag.is_set():
-            global text
-            global mw
-            global line_position
-            global space_state
-            while line_position < len(text):
-                line_position = max(0, line_position)
-                lp = line_position
-                if mode == "pdf":
-                    words = text[line_position].decode('utf-8').split()
+        global text
+        global mw
+        global line_position
+        global space_state
+        while line_position < len(text):
+            line_position = max(0, line_position)
+            lp = line_position
+            if mode == "pdf":
+                words = text[line_position].decode('utf-8').split()
+            else:
+                words = text[line_position].split()
+            for i in range(0, len(words), group_size):
+                word = " ".join(words[i:i+group_size])
+                mw.upcomming.setText(self.highlight_string(words, i))
+                if lp != line_position:
+                    break
+                if not run:
+                    return
+                if not show_punctuation:
+                    word = word.strip(string.punctuation)
+
+                mw.read.setText(word)
+
+                while space_state and run:
+                    mw.read.setText("PAUSED")
+                    time.sleep(0.5)
+
+                time.sleep(letter_boost*len(word))
+                if ',' in word:
+                    time.sleep(pause_time*comma_pause)
+                elif '.' in word:
+                    time.sleep(pause_time*period_pause)
                 else:
-                    words = text[line_position].split()
-                for i in range(0, len(words), group_size):
-                    word = " ".join(words[i:i+group_size])
-                    mw.upcomming.setText(self.highlight_string(words, i))
-                    if lp != line_position:
-                        break
-                    if self.shutdown_flag.is_set():
-                        print('Thread #%s stopped' % self.ident)
-                        return
-                    if not show_punctuation:
-                        word = word.strip(string.punctuation)
-
-                    mw.read.setText(word)
-
-                    while space_state and not self.shutdown_flag.is_set():
-                        mw.read.setText("PAUSED")
-                        time.sleep(0.5)
-
-                    sys.stdout.flush()
-                    time.sleep(letter_boost*len(word))
-                    if ',' in word:
-                        time.sleep(pause_time*comma_pause)
-                    elif '.' in word:
-                        time.sleep(pause_time*period_pause)
-                    else:
-                        time.sleep(pause_time)
-                    if not is_common(words[i:i+group_size]):
-                        print(f"Uncommon: '{word}'")
-                        time.sleep(uncommon)
-                else:
-                    line_position += 1
+                    time.sleep(pause_time)
+                if not is_common(words[i:i+group_size]):
+                    print(f"Uncommon: '{word}'")
+                    time.sleep(uncommon)
+            else:
+                line_position += 1
+        mw.close()
 
 
-class ServiceExit(Exception):
-    '''
-    cleaner on close
-    '''
-    def __init__(self, *args):
-        for instance in args:
-            print("Instance Closing", instance)
-            instance.shutdown_flag.set()
-
-
-def service_shutdown(signum, frame):
-    '''
-    signal handle
-    '''
-    raise ServiceExit(*running_threads)
 
 
 class MainWindow(QWidget):
@@ -145,31 +128,36 @@ class MainWindow(QWidget):
         self.setLayout(self.layout)
 
 
-def on_press(key):
-    '''
-    keypress handlers
-    '''
-    try:
-        global speed
-        global increment
-        global line_position
-        global space_state
-        global pause_time
+    def keyPressEvent(self, event):
+        '''
+        keypress handlers
+        '''
+        key = event.key()
+        try:
+            global speed
+            global increment
+            global line_position
+            global space_state
+            global pause_time
+            global run
 
-        if key == key.up:
-            speed = min(max_speed, speed+increment)
-        elif key == key.down:
-            speed = max(speed-increment, min_speed)
-        elif key == key.space:
-            space_state = not space_state
-        elif key == key.left:
-            line_position -= 1
-        elif key == key.right:
-            line_position += 1
-        pause_time = wpm_to_seconds(speed)
+            if key == QtCore.Qt.Key_Up:
+                speed = min(max_speed, speed+increment)
+            elif key == QtCore.Qt.Key_Down:
+                speed = max(speed-increment, min_speed)
+            elif key == QtCore.Qt.Key_Space:
+                space_state = not space_state
+            elif key == QtCore.Qt.Key_Left:
+                line_position -= 1
+            elif key == QtCore.Qt.Key_Right:
+                line_position += 1
+            elif key == QtCore.Qt.Key_Escape:
+                run = False
+                self.close()
+            pause_time = wpm_to_seconds(speed)*group_size
 
-    except AttributeError:
-        return
+        except AttributeError:
+            return
 
 
 def wpm_to_seconds(x):
@@ -203,7 +191,7 @@ def set_args():
                         help='The amount of time to pause for a comma after a word -- default=1')
     parser.add_argument('--period_pause', type=int, default=2,
                         help='The amount of time to pause for a period after a word -- default=2')
-    parser.add_argument('--letter_boost', type=float, default=0.01,
+    parser.add_argument('--letter_boost', type=float, default=0.001,
                         help='The amount of time to increase the pause for each letter in a word -- default=0.01')
     parser.add_argument('--uncommon', type=float, default=0.2,
                         help='The amount of time to increase the pause for each uncommon word -- default=0.2')
@@ -228,8 +216,6 @@ def set_args():
 
 set_args()
 
-signal.signal(signal.SIGTERM, service_shutdown)
-signal.signal(signal.SIGINT, service_shutdown)
 
 _, extension = os.path.splitext(file_name)
 if extension[-3:] == "pdf":
@@ -242,15 +228,8 @@ app = QApplication(list(sys.argv[0]))
 mw = MainWindow()
 mw.show()
 
-with Listener(on_press=on_press) as listener:
-    updater = update()
-    running_threads = [updater]
-    updater.start()
-
-    exit_code = app.exec_()
-    raise ServiceExit(*running_threads)
-    listener.join()
-
+updater = update()
+updater.start()
+exit_code = app.exec_()
 updater.join()
-
 sys.exit(exit_code)
