@@ -4,10 +4,16 @@ Displays one word at a time from a pdf, with text line positioning at the top
 ![gui_image](https://raw.githubusercontent.com/qubies/speedy_researcher/master/images/running_screen.png "Speedy Researcher In Action")
 
 # Dependancies
-* pyqt5 `apt-get install python3-pyqt5`
-
+* pyqt5 
 * textract
-* pynput `pip3 install --user textract pynput`
+* pynput 
+
+# Installation
+```
+git clone https://github.com/qubies/speedy_researcher.git
+cd speedy_researcher
+pip install --user -r requirements.txt
+```
 
 ## Controls
 * Up Arrow -> increase speed
