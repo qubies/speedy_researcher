@@ -1,0 +1,1 @@
+import speedy_researcher

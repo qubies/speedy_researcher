@@ -6,6 +6,7 @@ import threading
 import signal
 import string
 import textract
+import os
 from pynput.keyboard import Key, Listener
 from PyQt5.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -22,9 +23,10 @@ max_speed = 2000  # words per minute
 min_speed = 30  # words per minute
 
 common_words=set()
+mode='txt'
 
 # read in the word frequency file
-for line in open("english_word_frequencies.txt"):
+for line in open("data/english_word_frequencies.txt"):
     common_words.add(line.split()[0])
 
 def is_common(word):
@@ -47,8 +49,10 @@ class update(threading.Thread):
         surround_style = "font-size:12pt; color:#666;"
         prior_style = "font-size:12pt; color:#DDD;"
         current_style = "font-size:15pt; color:#D00;"
-        prior_lines = "<br>".join([line.decode('utf-8')
-                                   for line in text[max(0,line_position-3):line_position]])
+        if mode == "pdf":
+            prior_lines = "<br>".join([line.decode('utf-8') for line in text[max(0,line_position-3):line_position]])
+        else:
+            prior_lines = "<br>".join(text[max(0,line_position-3):line_position])
         return f"<span style='{prior_style}'>{prior_lines}<br></span><span style='{surround_style}'>{pre}</span><span style='{current_style}'> {current} </span><span style='{surround_style}'>{post}</span>"
 
     def run(self):
@@ -58,8 +62,12 @@ class update(threading.Thread):
             global line_position
             global space_state
             while line_position < len(text):
+                line_position = max(0, line_position)
                 lp = line_position
-                words = text[line_position].decode('utf-8').split()
+                if mode == "pdf":
+                    words = text[line_position].decode('utf-8').split()
+                else:
+                    words = text[line_position].split()
                 for i, word in enumerate(words):
                     mw.upcomming.setText(self.highlight_string(words, i))
                     if lp != line_position:
@@ -215,7 +223,13 @@ signal.signal(signal.SIGTERM, service_shutdown)
 signal.signal(signal.SIGINT, service_shutdown)
 
 set_args()
-text = textract.process(file_name).splitlines()
+_, extension = os.path.splitext(file_name)
+if extension[-3:] == "pdf":
+    mode = 'pdf'
+    text = textract.process(file_name).splitlines()
+else:
+    with open(file_name) as f:
+        text = f.readlines()
 app = QApplication(list(sys.argv[0]))
 mw = MainWindow()
 mw.show()
