@@ -29,9 +29,11 @@ mode='txt'
 for line in open("data/english_word_frequencies.txt"):
     common_words.add(line.split()[0])
 
-def is_common(word):
-    word = word.strip(string.punctuation).lower()
-    return word in common_words
+def is_common(words):
+    for word in words:
+        word = word.strip(string.punctuation).lower()
+        if word not in common_words: return False
+    return True
 
 class update(threading.Thread):
 
@@ -68,7 +70,8 @@ class update(threading.Thread):
                     words = text[line_position].decode('utf-8').split()
                 else:
                     words = text[line_position].split()
-                for i, word in enumerate(words):
+                for i in range(0, len(words), group_size):
+                    word = " ".join(words[i:i+group_size])
                     mw.upcomming.setText(self.highlight_string(words, i))
                     if lp != line_position:
                         break
@@ -92,7 +95,7 @@ class update(threading.Thread):
                         time.sleep(pause_time*period_pause)
                     else:
                         time.sleep(pause_time)
-                    if not is_common(word):
+                    if not is_common(words[i:i+group_size]):
                         print(f"Uncommon: '{word}'")
                         time.sleep(uncommon)
                 else:
@@ -183,6 +186,7 @@ def set_args():
     global pause_time
     global letter_boost
     global uncommon
+    global group_size
 
     parser = argparse.ArgumentParser()
     parser.add_argument("file_name")
@@ -204,6 +208,8 @@ def set_args():
                         help='The amount of time to increase the pause for each uncommon word -- default=0.2')
     parser.add_argument(
         '--hide_punctuation', help="Remove trailing punctuation from words displayed", action='store_true')
+    parser.add_argument(
+            '--group_size', type=int, default=1, help="The number of words displayed as a group")
 
     args = parser.parse_args()
 
@@ -217,12 +223,13 @@ def set_args():
     show_punctuation = not args.hide_punctuation
     letter_boost = args.letter_boost
     uncommon = args.uncommon
+    group_size = args.group_size
 
+set_args()
 
 signal.signal(signal.SIGTERM, service_shutdown)
 signal.signal(signal.SIGINT, service_shutdown)
 
-set_args()
 _, extension = os.path.splitext(file_name)
 if extension[-3:] == "pdf":
     mode = 'pdf'
