@@ -46,8 +46,9 @@ class update(threading.Thread):
         presents the document text, highlighting the current word in red
         '''
         pre = " ".join(current_text[:pos])
-        post = " ".join(current_text[pos+1:])
-        current = current_text[pos]
+        post = " ".join(current_text[pos+group_size:])
+        current = " ".join(current_text[pos:pos+group_size])
+
         surround_style = "font-size:12pt; color:#666;"
         prior_style = "font-size:12pt; color:#DDD;"
         current_style = "font-size:15pt; color:#D00;"
