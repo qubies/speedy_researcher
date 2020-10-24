@@ -10,97 +10,149 @@ import os
 from PyQt5.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget, QMessageBox
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
-run = True
+
+should_run = True
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 # STATE
 running_threads = []
 line_position = 0
-space_state = False
+pause_status = False
 pause_time = 0.3
+
+AI_Pause_Factor = pause_time
 
 # LIMITS
 max_speed = 20000  # words per minute
 min_speed = 30  # words per minute
 
-common_words=set()
-mode='txt'
+common_words = set()
+mode = "txt"
+
+
+class span:
+    def __init__(self, line, start, end):
+        self.line = line
+        self.char_start = start
+        self.char_end = end
+
+    def inside(self, line, char):
+        return line == line and char >= self.char_start and char < self.char_end
+
+
 # read in the word frequency file
 for line in open("data/english_word_frequencies.txt"):
     common_words.add(line.split()[0])
 
+
 def is_common(words):
     for word in words:
         word = word.strip(string.punctuation).lower()
-        if word not in common_words: return False
+        if word not in common_words:
+            return False
     return True
 
-class update(threading.Thread):
 
-    def __init__(self):
+def extractive_spans(lines):
+    return []
+
+
+def QA_spans(lines):
+    return [span(2, 7, 15), span(10, 1, 100)]
+
+
+def get_spans(lines):
+    AI_Spans = {}
+    for span in QA_spans(text) + extractive_spans(text):
+        if span.line not in AI_Spans:
+            AI_Spans[span.line] = []
+        AI_Spans[span.line].append(span)
+    return AI_Spans
+
+
+class update(threading.Thread):
+    def __init__(self, text):
+        self.text = text
+        self.AI_Spans = get_spans(self.text)
         threading.Thread.__init__(self)
 
+    def is_ai(self, line, char):
+        if line in self.AI_Spans:
+            for span in self.AI_Spans[line]:
+                if span.inside(line, char):
+                    return True
+        return False
+
     def highlight_string(self, current_text, pos):
-        '''
+        """
         presents the document text, highlighting the current word in red
-        '''
+        """
         pre = " ".join(current_text[:pos])
-        post = " ".join(current_text[pos+group_size:])
-        current = " ".join(current_text[pos:pos+group_size])
+        post = " ".join(current_text[pos + group_size :])
+        current = " ".join(current_text[pos : pos + group_size])
 
         surround_style = "font-size:12pt; color:#666;"
         prior_style = "font-size:12pt; color:#DDD;"
         current_style = "font-size:15pt; color:#D00;"
         if mode == "pdf":
-            prior_lines = "<br>".join([line.decode('utf-8') for line in text[max(0,line_position-3):line_position]])
+            prior_lines = "<br>".join(
+                [
+                    line.decode("utf-8")
+                    for line in text[max(0, line_position - 3) : line_position]
+                ]
+            )
         else:
-            prior_lines = "<br>".join(text[max(0,line_position-3):line_position])
+            prior_lines = "<br>".join(text[max(0, line_position - 3) : line_position])
         return f"<span style='{prior_style}'>{prior_lines}<br></span><span style='{surround_style}'>{pre}</span><span style='{current_style}'> {current} </span><span style='{surround_style}'>{post}</span>"
 
     def run(self):
-        global text
-        global mw
+        global main_window
+
+        # because these mix with the other thread they are left global
         global line_position
-        global space_state
+        global pause_status
+
         while line_position < len(text):
             line_position = max(0, line_position)
             lp = line_position
             if mode == "pdf":
-                words = text[line_position].decode('utf-8').split()
+                words = self.text[line_position].decode("utf-8").split()
             else:
-                words = text[line_position].split()
+                words = self.text[line_position].split()
             for i in range(0, len(words), group_size):
-                word = " ".join(words[i:i+group_size])
-                mw.upcomming.setText(self.highlight_string(words, i))
+                word = " ".join(words[i : i + group_size])
+                main_window.upcomming.setText(self.highlight_string(words, i))
                 if lp != line_position:
                     break
-                if not run:
+                if not should_run:
                     return
                 if not show_punctuation:
                     word = word.strip(string.punctuation)
 
-                mw.read.setText(word)
+                main_window.read.setText(word)
 
-                while space_state and run:
-                    mw.read.setText("PAUSED")
+                while pause_status and should_run:
+                    main_window.read.setText("PAUSED")
                     time.sleep(0.5)
 
-                time.sleep(letter_boost*len(word))
-                if ',' in word:
-                    time.sleep(pause_time*comma_pause)
-                elif '.' in word:
-                    time.sleep(pause_time*period_pause)
+                AI_pause = 1.0  # nothing
+                if self.is_ai(lp, i):
+                    AI_pause = AI_Pause_Factor
+
+                time.sleep(letter_boost * len(word)*AI_pause)
+                if "," in word:
+                    time.sleep(pause_time * comma_pause*AI_pause)
+                elif "." in word:
+                    time.sleep(pause_time * period_pause*AI_pause)
                 else:
-                    time.sleep(pause_time)
-                if not is_common(words[i:i+group_size]):
+                    time.sleep(pause_time*AI_pause)
+                if not is_common(words[i : i + group_size]):
                     print(f"Uncommon: '{word}'")
-                    time.sleep(uncommon)
+                    time.sleep(uncommon*AI_pause)
             else:
                 line_position += 1
-        mw.close()
-
-
+        main_window.close()
 
 
 class MainWindow(QWidget):
@@ -127,41 +179,40 @@ class MainWindow(QWidget):
         self.layout.addWidget(self.read)
         self.setLayout(self.layout)
 
-
     def keyPressEvent(self, event):
-        '''
+        """
         keypress handlers
-        '''
+        """
         key = event.key()
         try:
             global speed
             global increment
             global line_position
-            global space_state
+            global pause_status
             global pause_time
-            global run
+            global should_run
 
             if key == QtCore.Qt.Key_Up:
-                speed = min(max_speed, speed+increment)
+                speed = min(max_speed, speed + increment)
             elif key == QtCore.Qt.Key_Down:
-                speed = max(speed-increment, min_speed)
+                speed = max(speed - increment, min_speed)
             elif key == QtCore.Qt.Key_Space:
-                space_state = not space_state
+                pause_status = not pause_status
             elif key == QtCore.Qt.Key_Left:
                 line_position -= 1
             elif key == QtCore.Qt.Key_Right:
                 line_position += 1
             elif key == QtCore.Qt.Key_Escape:
-                run = False
+                should_run = False
                 self.close()
-            pause_time = wpm_to_seconds(speed)*group_size
+            pause_time = wpm_to_seconds(speed) * group_size
 
         except AttributeError:
             return
 
 
 def wpm_to_seconds(x):
-    return 1/(x/60)
+    return 1 / (x / 60)
 
 
 def set_args():
@@ -176,29 +227,68 @@ def set_args():
     global letter_boost
     global uncommon
     global group_size
+    global AI_Pause_Factor
 
     parser = argparse.ArgumentParser()
     parser.add_argument("file_name")
 
     # options
-    parser.add_argument('--speed', type=int, default=250,
-                        help='The base speed for the reader in words per minute -- default=180')
-    parser.add_argument('--increment', type=int, default=2,
-                        help='The increment increase in words per minute -- default=2')
-    parser.add_argument('--font_size', type=int, default=48,
-                        help='The font size -- default=48')
-    parser.add_argument('--comma_pause', type=int, default=1,
-                        help='The amount of time to pause for a comma after a word -- default=1')
-    parser.add_argument('--period_pause', type=int, default=2,
-                        help='The amount of time to pause for a period after a word -- default=2')
-    parser.add_argument('--letter_boost', type=float, default=0.001,
-                        help='The amount of time to increase the pause for each letter in a word -- default=0.01')
-    parser.add_argument('--uncommon', type=float, default=0.2,
-                        help='The amount of time to increase the pause for each uncommon word -- default=0.2')
     parser.add_argument(
-        '--hide_punctuation', help="Remove trailing punctuation from words displayed", action='store_true')
+        "--speed",
+        type=int,
+        default=250,
+        help="The base speed for the reader in words per minute -- default=180",
+    )
     parser.add_argument(
-            '--group_size', type=int, default=1, help="The number of words displayed as a group")
+        "--increment",
+        type=int,
+        default=2,
+        help="The increment increase in words per minute -- default=2",
+    )
+    parser.add_argument(
+        "--font_size", type=int, default=48, help="The font size -- default=48"
+    )
+    parser.add_argument(
+        "--comma_pause",
+        type=int,
+        default=1,
+        help="The amount of time to pause for a comma after a word -- default=1",
+    )
+    parser.add_argument(
+        "--period_pause",
+        type=int,
+        default=2,
+        help="The amount of time to pause for a period after a word -- default=2",
+    )
+    parser.add_argument(
+        "--letter_boost",
+        type=float,
+        default=0.001,
+        help="The amount of time to increase the pause for each letter in a word -- default=0.01",
+    )
+    parser.add_argument(
+        "--AI_pause",
+        type=float,
+        default=2.0,
+        help="The amount of time to increase the pause for AI highlight spans -- default=2.0",
+    )
+    parser.add_argument(
+        "--uncommon",
+        type=float,
+        default=0.2,
+        help="The amount of time to increase the pause for each uncommon word -- default=0.2",
+    )
+    parser.add_argument(
+        "--hide_punctuation",
+        help="Remove trailing punctuation from words displayed",
+        action="store_true",
+    )
+    parser.add_argument(
+        "--group_size",
+        type=int,
+        default=1,
+        help="The number of words displayed as a group",
+    )
 
     args = parser.parse_args()
 
@@ -213,23 +303,28 @@ def set_args():
     letter_boost = args.letter_boost
     uncommon = args.uncommon
     group_size = args.group_size
+    AI_Pause_Factor = args.AI_pause
+
 
 set_args()
 
 
 _, extension = os.path.splitext(file_name)
 if extension[-3:] == "pdf":
-    mode = 'pdf'
+    mode = "pdf"
     text = textract.process(file_name).splitlines()
 else:
     with open(file_name) as f:
         text = f.readlines()
-app = QApplication(list(sys.argv[0]))
-mw = MainWindow()
-mw.show()
 
-updater = update()
+app = QApplication(list(sys.argv[0]))
+main_window = MainWindow()
+main_window.show()
+
+## run on the text
+updater = update(text)
 updater.start()
+
 exit_code = app.exec_()
 updater.join()
 sys.exit(exit_code)
