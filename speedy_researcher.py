@@ -76,19 +76,27 @@ def wpm_calc(t, num_words):
 
 
 class Record:
-    def __init__(self, text, timing_info):
+    def __init__(self, text, timing_info, comp_correct, comp_total):
         self.text = text
         # This is bad but should be fine...
         self.num_words = len(" ".join(text).split())
         self.timing_info = timing_info
         self.wpm = wpm_calc(timing_info, self.num_words)
+        self.comp_correct = comp_correct
+        self.comp_total = comp_total
+        self.comp_score = comp_correct/comp_total
+        self.wpm_ci = self.comp_score * self.wpm 
 
     def __str__(self):
-        return f"WPM_net: {self.wpm:.2f} Words: {self.num_words}"
+        return f"WPM_ci: {self.wpm_ci:.2f} WPM_net: {self.wpm:.2f} Words: {self.num_words}"
 
     def __repr__(self):
         return self.__str__()
 
+def get_weights(n):
+    return [1/(n-(i-1))**2 for i in range(1, n+1)]
+
+print(get_weights(5))
 
 class Timing:
     def __init__(self, what):
@@ -96,11 +104,19 @@ class Timing:
         self.what = what
         self.records = []
 
-    def report(self):
-        elapsed_time = time.perf_counter() - self.start
-        self.records.append(Record(text, elapsed_time))
-        for rec in self.records:
+    def done_reading(self):
+        self.reading_time = time.perf_counter() - self.start
+
+    def record_result(self, comp_correct, comp_total):
+        self.records.append(Record(text, self.reading_time, comp_correct, comp_total))
+        weights = get_weights(len(self.records))
+        wpm_w = 0
+
+        for rec, weight in zip(self.records, weights):
             print(rec)
+            wpm_w += rec.wpm_ci*weight
+        self.wpm_w = wpm_w/sum(weights)
+        print(f"wpm_w: {self.wpm_w:.2f}")
 
     def reset(self):
         self.start = time.perf_counter()
@@ -189,7 +205,10 @@ class update(threading.Thread):
                     time.sleep(uncommon * AI_pause)
             else:
                 line_position += 1
-        t.report()
+        t.done_reading()
+        t.record_result(5,5)
+        t.record_result(4,5)
+        t.record_result(3,5)
         main_window.close()
 
 
