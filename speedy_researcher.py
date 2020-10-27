@@ -71,6 +71,41 @@ def get_spans(lines):
     return AI_Spans
 
 
+def wpm_calc(t, num_words):
+    return num_words / (t / 60)
+
+
+class Record:
+    def __init__(self, text, timing_info):
+        self.text = text
+        # This is bad but should be fine...
+        self.num_words = len(" ".join(text).split())
+        self.timing_info = timing_info
+        self.wpm = wpm_calc(timing_info, self.num_words)
+
+    def __str__(self):
+        return f"WPM_net: {self.wpm:.2f} Words: {self.num_words}"
+
+    def __repr__(self):
+        return self.__str__()
+
+
+class Timing:
+    def __init__(self, what):
+        self.start = time.perf_counter()
+        self.what = what
+        self.records = []
+
+    def report(self):
+        elapsed_time = time.perf_counter() - self.start
+        self.records.append(Record(text, elapsed_time))
+        for rec in self.records:
+            print(rec)
+
+    def reset(self):
+        self.start = time.perf_counter()
+
+
 class update(threading.Thread):
     def __init__(self, text):
         self.text = text
@@ -113,6 +148,8 @@ class update(threading.Thread):
         global line_position
         global pause_status
 
+        t = Timing("test")
+
         while line_position < len(text):
             line_position = max(0, line_position)
             lp = line_position
@@ -140,18 +177,19 @@ class update(threading.Thread):
                 if self.is_ai(lp, i):
                     AI_pause = AI_Pause_Factor
 
-                time.sleep(letter_boost * len(word)*AI_pause)
+                time.sleep(letter_boost * len(word) * AI_pause)
                 if "," in word:
-                    time.sleep(pause_time * comma_pause*AI_pause)
+                    time.sleep(pause_time * comma_pause * AI_pause)
                 elif "." in word:
-                    time.sleep(pause_time * period_pause*AI_pause)
+                    time.sleep(pause_time * period_pause * AI_pause)
                 else:
-                    time.sleep(pause_time*AI_pause)
+                    time.sleep(pause_time * AI_pause)
                 if not is_common(words[i : i + group_size]):
                     print(f"Uncommon: '{word}'")
-                    time.sleep(uncommon*AI_pause)
+                    time.sleep(uncommon * AI_pause)
             else:
                 line_position += 1
+        t.report()
         main_window.close()
 
 
