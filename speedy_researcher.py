@@ -165,6 +165,8 @@ class update(threading.Thread):
         global pause_status
 
         t = Timing("test")
+        global space_state
+        global lock
 
         while line_position < len(text):
             line_position = max(0, line_position)
@@ -187,7 +189,7 @@ class update(threading.Thread):
 
                 while pause_status and should_run:
                     main_window.read.setText("PAUSED")
-                    time.sleep(0.5)
+                    lock.acquire()
 
                 AI_pause = 1.0  # nothing
                 if self.is_ai(lp, i):
@@ -195,9 +197,9 @@ class update(threading.Thread):
 
                 time.sleep(letter_boost * len(word) * AI_pause)
                 if "," in word:
-                    time.sleep(pause_time * comma_pause * AI_pause)
-                elif "." in word:
-                    time.sleep(pause_time * period_pause * AI_pause)
+                    time.sleep(pause_time * comma_pause*AI_pause)
+                elif any(x in word for x in ['.', '!', '?', '...', ':', ';']):
+                    time.sleep(pause_time * period_pause*AI_pause)
                 else:
                     time.sleep(pause_time * AI_pause)
                 if not is_common(words[i : i + group_size]):
@@ -248,13 +250,21 @@ class MainWindow(QWidget):
             global pause_status
             global pause_time
             global should_run
+            global run
+            global lock
 
             if key == QtCore.Qt.Key_Up:
                 speed = min(max_speed, speed + increment)
             elif key == QtCore.Qt.Key_Down:
                 speed = max(speed - increment, min_speed)
             elif key == QtCore.Qt.Key_Space:
-                pause_status = not pause_status
+
+                #grab lock to pause, or if already paused release
+                if (lock.acquire(False)):                
+                    pass
+                else:
+                    lock.release()
+                    pause_status = not pause_status
             elif key == QtCore.Qt.Key_Left:
                 line_position -= 1
             elif key == QtCore.Qt.Key_Right:
@@ -271,8 +281,9 @@ class MainWindow(QWidget):
 def wpm_to_seconds(x):
     return 1 / (x / 60)
 
-
+lock = threading.Semaphore(1)
 def set_args():
+    global lock 
     global speed  # = 0.3
     global increment  # = 0.05
     global font_size  # = 60
