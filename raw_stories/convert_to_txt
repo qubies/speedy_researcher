@@ -1,0 +1,1 @@
+for file in *; do  if [[ $file =~ (.*)\.rtf ]] ; then unrtf --text $file > ${BASH_REMATCH[1]}.txt fi; done
