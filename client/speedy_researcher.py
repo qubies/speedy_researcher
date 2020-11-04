@@ -195,7 +195,7 @@ class update(QRunnable):
         global space_state
         global lock
 
-        while line_position < len(text):
+        while line_position < len(text) and not self.main_window.event_stop.is_set():
             if USER == "":
                 time.sleep(0.2)
                 continue
@@ -273,7 +273,7 @@ class LoginWindow(QWidget):
 
     def closeEvent(self, event):
         if USER == "":
-            main_window.close()
+            main_window.event_stop.set()
         event.accept()
 
     def check_password(self):
@@ -297,6 +297,7 @@ class MainWindow(QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.threadpool = QThreadPool()
+        self.event_stop = threading.Event()
         ## gui layout options
 
         self.login()
