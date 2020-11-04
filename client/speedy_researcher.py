@@ -24,7 +24,6 @@ from PyQt5.QtWidgets import (
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import *
 
-should_run = True
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
@@ -206,18 +205,21 @@ class update(QRunnable):
             else:
                 words = self.text[line_position].split()
             for i in range(0, len(words), group_size):
+                if self.main_window.event_stop.is_set():
+                    return
                 word = " ".join(words[i : i + group_size])
-                self.main_window.upcomming.setText(self.highlight_string(words, i))
+                try:
+                    self.main_window.upcomming.setText(self.highlight_string(words, i))
+                except:
+                    break
                 if lp != line_position:
                     break
-                if not should_run:
-                    return
                 if not show_punctuation:
                     word = word.strip(string.punctuation)
 
                 self.main_window.read.setText(word)
 
-                while pause_status and should_run:
+                while pause_status and not self.main_window.event_stop.is_set():
                     self.main_window.read.setText("PAUSED")
                     lock.acquire()
 
@@ -340,7 +342,6 @@ class MainWindow(QWidget):
             global line_position
             global pause_status
             global pause_time
-            global should_run
             global run
             global lock
 
@@ -361,7 +362,7 @@ class MainWindow(QWidget):
             elif key == QtCore.Qt.Key_Right:
                 line_position += 1
             elif key == QtCore.Qt.Key_Escape:
-                should_run = False
+                self.event_stop.set()
                 self.close()
             pause_time = wpm_to_seconds(speed) * group_size
 
