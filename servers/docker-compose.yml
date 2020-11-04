@@ -1,0 +1,14 @@
+version: "3"
+services:
+    rest:
+        container_name: speedy_researcher_rest_api
+        build:
+            context: .
+            dockerfile: rest_dockerfile
+        environment:
+            - REST_PORT=${REST_PORT}
+        ports:
+            - ${REST_PORT}:${REST_PORT}
+        volumes:
+            - ./rest:/app
+

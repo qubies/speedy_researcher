@@ -6,7 +6,6 @@ Displays one word at a time from a pdf, with text line positioning at the top
 # Dependancies
 * pyqt5 
 * textract
-* pynput 
 
 # Installation
 ```
