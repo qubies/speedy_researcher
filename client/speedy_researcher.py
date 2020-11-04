@@ -153,6 +153,7 @@ class update(QRunnable):
         self.text = text
         self.AI_Spans = get_spans(self.text)
         threading.Thread.__init__(self)
+        self.run = False
 
     def is_ai(self, line, char):
         if line in self.AI_Spans:
@@ -195,6 +196,9 @@ class update(QRunnable):
         global lock
 
         while line_position < len(text):
+            if USER == "":
+                time.sleep(0.2)
+                continue
             line_position = max(0, line_position)
             lp = line_position
             if mode == "pdf":
@@ -268,15 +272,17 @@ class LoginWindow(QWidget):
         self.setLayout(layout)
 
     def check_password(self):
+        global USER
         msg = QMessageBox()
 
         if (
-            self.lineEdit_username.text() == "Usernmae"
-            and self.lineEdit_password.text() == "000"
+            self.lineEdit_username.text() == "user"
+            and self.lineEdit_password.text() == "pwd"
         ):
             msg.setText("Success")
             msg.exec_()
-            app.quit()
+            USER = self.lineEdit_username.text()
+            self.close()
         else:
             msg.setText("Incorrect Password")
             msg.exec_()
@@ -302,7 +308,7 @@ class MainWindow(QWidget):
         self.upcomming.setText("")
         self.upcomming.setAlignment(Qt.AlignHCenter)
 
-        self.read = QLabel("LINE")
+        self.read = QLabel("Welcome!!")
         self.read.setAlignment(Qt.AlignHCenter)
         self.read.setFont(read_font)
 
