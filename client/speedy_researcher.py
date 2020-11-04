@@ -11,6 +11,12 @@ from PyQt5.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget, QMessage
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 
+from summarizer import Summarizer
+from spacy.lang.en import English
+import re
+
+model = Summarizer()
+
 should_run = True
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -55,12 +61,25 @@ def is_common(words):
 
 
 def extractive_spans(lines):
-    return []
+    text = "".join(lines)
+    important_text = model(text)
+    nlp = English()
+    nlp.add_pipe(nlp.create_pipe('sentencizer'))
+    doc = nlp(important_text)
+    sentences = [sent.string.strip() for sent in doc.sents]
+    span_list =	[]
+    for i,l in enumerate(lines):
+        for s in sentences:
+            match = re.search(s, l)
+            if match:
+                span_list.append(span(i, match.span()[0], match.span()[1]))
+    return span_list
+
 
 
 def QA_spans(lines):
-    return [span(2, 7, 15), span(10, 1, 100)]
-
+    #return [span(2, 7, 15), span(10, 1, 100)]
+    return []
 
 def get_spans(lines):
     AI_Spans = {}

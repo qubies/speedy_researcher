@@ -1,18 +1,7 @@
-        
-        
-        
-        
-        
-        
-        
-        
- Name: _____________________
+Name: _____________________
 Nutrition Facts Comprehension Quiz
-Directions: Compare the nutritional value of the four items & respond to the questions. 
-
-
-
-	Item A - Vegetable Chips
+Directions: Compare the nutritional value of the four items & respond to the questions.
+Item A - Vegetable Chips
 
 Nutrition Facts
 Serving Size 1 oz (28g/about 14 chips)
@@ -124,7 +113,8 @@ ______________________________________________________________________
 	Item D  Pretzel Twists
 
 Nutrition Facts
-Serving Size 1 oz. (About 8 pretzels)
+Serving Size 1 oz. (
+About 8 pretzels)
 Servings Per Container about 10
 ______________________________________________________________________
 Amount Per Serving
@@ -154,7 +144,3 @@ ______________________________________________________________________
 Vitamin A 0% Vitamin C 0%
 Calcium 0% Iron 8%
 ______________________________________________________________________
-
-
-
-
