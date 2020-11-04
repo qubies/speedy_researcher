@@ -119,7 +119,7 @@ def get_weights(n):
     return [1 / (n - (i - 1)) ** 2 for i in range(1, n + 1)]
 
 
-print(get_weights(5))
+#  print(get_weights(5))
 
 
 class Timing:
@@ -233,7 +233,7 @@ class update(QRunnable):
                 else:
                     time.sleep(pause_time * AI_pause)
                 if not is_common(words[i : i + group_size]):
-                    print(f"Uncommon: '{word}'")
+                    #  print(f"Uncommon: '{word}'")
                     time.sleep(uncommon * AI_pause)
             else:
                 line_position += 1
