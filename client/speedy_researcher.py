@@ -7,9 +7,22 @@ import signal
 import string
 import textract
 import os
-from PyQt5.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget, QMessageBox
+from PyQt5.QtWidgets import (
+    QApplication,
+    QLabel,
+    QVBoxLayout,
+    QWidget,
+    QMessageBox,
+    QMdiSubWindow,
+    QTextEdit,
+    QMainWindow,
+    QMdiArea,
+    QGridLayout,
+    QLineEdit,
+    QPushButton,
+)
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import *
 
 should_run = True
 
@@ -30,6 +43,12 @@ min_speed = 30  # words per minute
 common_words = set()
 mode = "txt"
 
+USER = ""
+
+
+def get_login():
+    pass
+
 
 class span:
     def __init__(self, line, start, end):
@@ -42,7 +61,7 @@ class span:
 
 
 # read in the word frequency file
-for line in open("data/english_word_frequencies.txt"):
+for line in open("client/data/english_word_frequencies.txt"):
     common_words.add(line.split()[0])
 
 
@@ -84,19 +103,24 @@ class Record:
         self.wpm = wpm_calc(timing_info, self.num_words)
         self.comp_correct = comp_correct
         self.comp_total = comp_total
-        self.comp_score = comp_correct/comp_total
-        self.wpm_ci = self.comp_score * self.wpm 
+        self.comp_score = comp_correct / comp_total
+        self.wpm_ci = self.comp_score * self.wpm
 
     def __str__(self):
-        return f"WPM_ci: {self.wpm_ci:.2f} WPM_net: {self.wpm:.2f} Words: {self.num_words}"
+        return (
+            f"WPM_ci: {self.wpm_ci:.2f} WPM_net: {self.wpm:.2f} Words: {self.num_words}"
+        )
 
-    def __repr__(self):
-        return self.__str__()
+        def __repr__(self):
+            return self.__str__()
+
 
 def get_weights(n):
-    return [1/(n-(i-1))**2 for i in range(1, n+1)]
+    return [1 / (n - (i - 1)) ** 2 for i in range(1, n + 1)]
+
 
 print(get_weights(5))
+
 
 class Timing:
     def __init__(self, what):
@@ -114,16 +138,18 @@ class Timing:
 
         for rec, weight in zip(self.records, weights):
             print(rec)
-            wpm_w += rec.wpm_ci*weight
-        self.wpm_w = wpm_w/sum(weights)
+            wpm_w += rec.wpm_ci * weight
+        self.wpm_w = wpm_w / sum(weights)
         print(f"wpm_w: {self.wpm_w:.2f}")
 
     def reset(self):
         self.start = time.perf_counter()
 
 
-class update(threading.Thread):
-    def __init__(self, text):
+class update(QRunnable):
+    def __init__(self, text, main_window):
+        self.main_window = main_window
+        super(update, self).__init__()
         self.text = text
         self.AI_Spans = get_spans(self.text)
         threading.Thread.__init__(self)
@@ -157,8 +183,8 @@ class update(threading.Thread):
             prior_lines = "<br>".join(text[max(0, line_position - 3) : line_position])
         return f"<span style='{prior_style}'>{prior_lines}<br></span><span style='{surround_style}'>{pre}</span><span style='{current_style}'> {current} </span><span style='{surround_style}'>{post}</span>"
 
+    @pyqtSlot()
     def run(self):
-        global main_window
 
         # because these mix with the other thread they are left global
         global line_position
@@ -177,7 +203,7 @@ class update(threading.Thread):
                 words = self.text[line_position].split()
             for i in range(0, len(words), group_size):
                 word = " ".join(words[i : i + group_size])
-                main_window.upcomming.setText(self.highlight_string(words, i))
+                self.main_window.upcomming.setText(self.highlight_string(words, i))
                 if lp != line_position:
                     break
                 if not should_run:
@@ -185,10 +211,10 @@ class update(threading.Thread):
                 if not show_punctuation:
                     word = word.strip(string.punctuation)
 
-                main_window.read.setText(word)
+                self.main_window.read.setText(word)
 
                 while pause_status and should_run:
-                    main_window.read.setText("PAUSED")
+                    self.main_window.read.setText("PAUSED")
                     lock.acquire()
 
                 AI_pause = 1.0  # nothing
@@ -197,9 +223,9 @@ class update(threading.Thread):
 
                 time.sleep(letter_boost * len(word) * AI_pause)
                 if "," in word:
-                    time.sleep(pause_time * comma_pause*AI_pause)
-                elif any(x in word for x in ['.', '!', '?', '...', ':', ';']):
-                    time.sleep(pause_time * period_pause*AI_pause)
+                    time.sleep(pause_time * comma_pause * AI_pause)
+                elif any(x in word for x in [".", "!", "?", "...", ":", ";"]):
+                    time.sleep(pause_time * period_pause * AI_pause)
                 else:
                     time.sleep(pause_time * AI_pause)
                 if not is_common(words[i : i + group_size]):
@@ -208,16 +234,63 @@ class update(threading.Thread):
             else:
                 line_position += 1
         t.done_reading()
-        t.record_result(5,5)
-        t.record_result(4,5)
-        t.record_result(3,5)
-        main_window.close()
+        t.record_result(5, 5)
+        t.record_result(4, 5)
+        t.record_result(3, 5)
+        self.main_window.close()
+
+
+class LoginWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Login Form")
+        self.resize(500, 120)
+
+        layout = QGridLayout()
+
+        label_name = QLabel('<font size="4"> Username </font>')
+        self.lineEdit_username = QLineEdit()
+        self.lineEdit_username.setPlaceholderText("Please enter your username")
+        layout.addWidget(label_name, 0, 0)
+        layout.addWidget(self.lineEdit_username, 0, 1)
+
+        label_password = QLabel('<font size="4"> Password </font>')
+        self.lineEdit_password = QLineEdit()
+        self.lineEdit_password.setPlaceholderText("Please enter your password")
+        layout.addWidget(label_password, 1, 0)
+        layout.addWidget(self.lineEdit_password, 1, 1)
+
+        button_login = QPushButton("Login")
+        button_login.clicked.connect(self.check_password)
+        layout.addWidget(button_login, 2, 0, 1, 2)
+        layout.setRowMinimumHeight(2, 75)
+
+        self.setLayout(layout)
+
+    def check_password(self):
+        msg = QMessageBox()
+
+        if (
+            self.lineEdit_username.text() == "Usernmae"
+            and self.lineEdit_password.text() == "000"
+        ):
+            msg.setText("Success")
+            msg.exec_()
+            app.quit()
+        else:
+            msg.setText("Incorrect Password")
+            msg.exec_()
 
 
 class MainWindow(QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
+        self.threadpool = QThreadPool()
         ## gui layout options
+
+        self.login()
+        updater = update(text, self)
+        self.threadpool.start(updater)
         upcomming_font = QtGui.QFont("Times", 14, QtGui.QFont.Bold)
         read_font = QtGui.QFont("Times", font_size, QtGui.QFont.Bold)
 
@@ -237,6 +310,11 @@ class MainWindow(QWidget):
         self.layout.addWidget(self.upcomming)
         self.layout.addWidget(self.read)
         self.setLayout(self.layout)
+
+    def login(self):
+        self.login = LoginWindow()
+        self.login.setWindowModality(QtCore.Qt.ApplicationModal)
+        self.login.show()
 
     def keyPressEvent(self, event):
         """
@@ -259,8 +337,8 @@ class MainWindow(QWidget):
                 speed = max(speed - increment, min_speed)
             elif key == QtCore.Qt.Key_Space:
 
-                #grab lock to pause, or if already paused release
-                if (lock.acquire(False)):                
+                # grab lock to pause, or if already paused release
+                if lock.acquire(False):
                     pass
                 else:
                     lock.release()
@@ -281,9 +359,12 @@ class MainWindow(QWidget):
 def wpm_to_seconds(x):
     return 1 / (x / 60)
 
+
 lock = threading.Semaphore(1)
+
+
 def set_args():
-    global lock 
+    global lock
     global speed  # = 0.3
     global increment  # = 0.05
     global font_size  # = 60
@@ -386,13 +467,12 @@ else:
         text = f.readlines()
 
 app = QApplication(list(sys.argv[0]))
+
 main_window = MainWindow()
 main_window.show()
 
 ## run on the text
-updater = update(text)
-updater.start()
 
 exit_code = app.exec_()
-updater.join()
+#  updater.join()
 sys.exit(exit_code)
