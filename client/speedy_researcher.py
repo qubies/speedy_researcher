@@ -271,6 +271,11 @@ class LoginWindow(QWidget):
 
         self.setLayout(layout)
 
+    def closeEvent(self, event):
+        if USER == "":
+            main_window.close()
+        event.accept()
+
     def check_password(self):
         global USER
         msg = QMessageBox()
