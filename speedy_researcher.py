@@ -61,7 +61,8 @@ def is_common(words):
 
 
 def extractive_spans(lines):
-    important_text = model(lines)
+    text = "".join(lines)
+    important_text = model(text)
     nlp = English()
     nlp.add_pipe(nlp.create_pipe('sentencizer'))
     doc = nlp(important_text)
