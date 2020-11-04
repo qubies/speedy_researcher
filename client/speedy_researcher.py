@@ -16,7 +16,7 @@ import json
 ## server
 PORT = 4969
 IP = "34.83.200.130"
-IP = "localhost"
+#  IP = "localhost"
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 # STATE
@@ -66,9 +66,6 @@ def is_common(words):
 def get_text(number):
     PARAMS = {"user": USER, "storyNumber": number}
     return requests.get(url=f"http://{IP}:{PORT}/text", params=PARAMS).json()
-
-
-print(get_text(1))
 
 
 def wpm_calc(t, num_words):
@@ -217,7 +214,6 @@ class update(QRunnable):
                 if not is_common(words[i : i + group_size]):
                     #  print(f"Uncommon: '{word}'")
                     time.sleep(uncommon * AI_pause)
-            print(line_position)
             line_position += 1
         t.done_reading()
         if USER != "":
@@ -453,7 +449,6 @@ set_args()
 story_number = 0
 data = get_text(story_number)
 text = data["text"]
-print(data)
 
 app = QApplication(sys.argv)
 
