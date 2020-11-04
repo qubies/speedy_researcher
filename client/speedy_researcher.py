@@ -238,9 +238,10 @@ class update(QRunnable):
             else:
                 line_position += 1
         t.done_reading()
-        t.record_result(5, 5)
-        t.record_result(4, 5)
-        t.record_result(3, 5)
+        if USER != "":
+            t.record_result(5, 5)
+        #  t.record_result(4, 5)
+        #  t.record_result(3, 5)
         self.main_window.close()
 
 
