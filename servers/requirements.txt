@@ -1,1 +1,3 @@
 flask
+spacy
+bert-extractive-summarizer
