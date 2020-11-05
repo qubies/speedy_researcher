@@ -1,8 +1,9 @@
-from python:3
-RUN apt-get update
+from ubuntu:latest
+RUN apt-get update && apt-get install -y python3-pip
 RUN mkdir /app
 ADD ./requirements.txt /app/requirements.txt
 workdir /app
-RUN pip install -r requirements.txt
-CMD python server.py
+RUN pip3 install -r requirements.txt
+RUN python3 -m spacy download en_core_web_sm
+CMD python3 server.py
 

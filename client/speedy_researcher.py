@@ -7,35 +7,19 @@ import signal
 import string
 import textract
 import os
-from PyQt5.QtWidgets import (
-    QApplication,
-    QLabel,
-    QVBoxLayout,
-    QWidget,
-    QMessageBox,
-    QMdiSubWindow,
-    QTextEdit,
-    QMainWindow,
-    QMdiArea,
-    QGridLayout,
-    QLineEdit,
-    QPushButton,
-)
+from PyQt5.QtWidgets import *
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import *
+import requests
+import json
 
-from summarizer import Summarizer
-from spacy.lang.en import English
-import re
-
-model = Summarizer()
-
-should_run = True
-
+## server
+PORT = 4969
+IP = "34.83.200.130"
+#  IP = "localhost"
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 # STATE
-running_threads = []
 line_position = 0
 pause_status = False
 pause_time = 0.3
@@ -79,34 +63,9 @@ def is_common(words):
     return True
 
 
-def extractive_spans(lines):
-    text = "".join(lines)
-    important_text = model(text)
-    nlp = English()
-    nlp.add_pipe(nlp.create_pipe('sentencizer'))
-    doc = nlp(important_text)
-    sentences = [sent.string.strip() for sent in doc.sents]
-    span_list =	[]
-    for i,l in enumerate(lines):
-        for s in sentences:
-            match = re.search(s, l)
-            if match:
-                span_list.append(span(i, match.span()[0], match.span()[1]))
-    return span_list
-
-
-
-def QA_spans(lines):
-    #return [span(2, 7, 15), span(10, 1, 100)]
-    return []
-
-def get_spans(lines):
-    AI_Spans = {}
-    for span in QA_spans(text) + extractive_spans(text):
-        if span.line not in AI_Spans:
-            AI_Spans[span.line] = []
-        AI_Spans[span.line].append(span)
-    return AI_Spans
+def get_text(number):
+    PARAMS = {"user": USER, "storyNumber": number}
+    return requests.get(url=f"http://{IP}:{PORT}/text", params=PARAMS).json()
 
 
 def wpm_calc(t, num_words):
@@ -138,7 +97,7 @@ def get_weights(n):
     return [1 / (n - (i - 1)) ** 2 for i in range(1, n + 1)]
 
 
-print(get_weights(5))
+#  print(get_weights(5))
 
 
 class Timing:
@@ -150,8 +109,10 @@ class Timing:
     def done_reading(self):
         self.reading_time = time.perf_counter() - self.start
 
-    def record_result(self, comp_correct, comp_total):
-        self.records.append(Record(text, self.reading_time, comp_correct, comp_total))
+    def record_result(self, text_name, comp_correct, comp_total):
+        self.records.append(
+            Record(text_name, self.reading_time, comp_correct, comp_total)
+        )
         weights = get_weights(len(self.records))
         wpm_w = 0
 
@@ -166,11 +127,11 @@ class Timing:
 
 
 class update(QRunnable):
-    def __init__(self, text, main_window):
+    def __init__(self, data, main_window):
         self.main_window = main_window
         super(update, self).__init__()
-        self.text = text
-        self.AI_Spans = get_spans(self.text)
+        self.text = data["text"]
+        self.AI_Spans = [span(x, y, z) for x, y, z in data["spans"]]
         threading.Thread.__init__(self)
         self.run = False
 
@@ -214,29 +175,28 @@ class update(QRunnable):
         global space_state
         global lock
 
-        while line_position < len(text):
+        while (
+            line_position < len(self.text) and not self.main_window.event_stop.is_set()
+        ):
             if USER == "":
                 time.sleep(0.2)
                 continue
             line_position = max(0, line_position)
             lp = line_position
-            if mode == "pdf":
-                words = self.text[line_position].decode("utf-8").split()
-            else:
-                words = self.text[line_position].split()
+            words = self.text[line_position].split()
             for i in range(0, len(words), group_size):
+                if self.main_window.event_stop.is_set():
+                    return
                 word = " ".join(words[i : i + group_size])
                 self.main_window.upcomming.setText(self.highlight_string(words, i))
                 if lp != line_position:
                     break
-                if not should_run:
-                    return
                 if not show_punctuation:
                     word = word.strip(string.punctuation)
 
                 self.main_window.read.setText(word)
 
-                while pause_status and should_run:
+                while pause_status and not self.main_window.event_stop.is_set():
                     self.main_window.read.setText("PAUSED")
                     lock.acquire()
 
@@ -252,14 +212,14 @@ class update(QRunnable):
                 else:
                     time.sleep(pause_time * AI_pause)
                 if not is_common(words[i : i + group_size]):
-                    print(f"Uncommon: '{word}'")
+                    #  print(f"Uncommon: '{word}'")
                     time.sleep(uncommon * AI_pause)
-            else:
-                line_position += 1
+            line_position += 1
         t.done_reading()
-        t.record_result(5, 5)
-        t.record_result(4, 5)
-        t.record_result(3, 5)
+        if USER != "":
+            t.record_result("a", 5, 5)
+        #  t.record_result(4, 5)
+        #  t.record_result(3, 5)
         self.main_window.close()
 
 
@@ -292,19 +252,20 @@ class LoginWindow(QWidget):
 
     def closeEvent(self, event):
         if USER == "":
-            main_window.close()
+            main_window.event_stop.set()
         event.accept()
 
     def check_password(self):
         global USER
+        USER = "user"
+        self.close()
+        return
         msg = QMessageBox()
 
         if (
             self.lineEdit_username.text() == "user"
             and self.lineEdit_password.text() == "pwd"
         ):
-            msg.setText("Success")
-            msg.exec_()
             USER = self.lineEdit_username.text()
             self.close()
         else:
@@ -316,10 +277,11 @@ class MainWindow(QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.threadpool = QThreadPool()
+        self.event_stop = threading.Event()
         ## gui layout options
 
         self.login()
-        updater = update(text, self)
+        updater = update(data, self)
         self.threadpool.start(updater)
         upcomming_font = QtGui.QFont("Times", 14, QtGui.QFont.Bold)
         read_font = QtGui.QFont("Times", font_size, QtGui.QFont.Bold)
@@ -357,7 +319,6 @@ class MainWindow(QWidget):
             global line_position
             global pause_status
             global pause_time
-            global should_run
             global run
             global lock
 
@@ -378,7 +339,7 @@ class MainWindow(QWidget):
             elif key == QtCore.Qt.Key_Right:
                 line_position += 1
             elif key == QtCore.Qt.Key_Escape:
-                should_run = False
+                self.event_stop.set()
                 self.close()
             pause_time = wpm_to_seconds(speed) * group_size
 
@@ -409,7 +370,6 @@ def set_args():
     global AI_Pause_Factor
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("file_name")
 
     # options
     parser.add_argument(
@@ -471,7 +431,6 @@ def set_args():
 
     args = parser.parse_args()
 
-    file_name = args.file_name
     speed = args.speed
     pause_time = wpm_to_seconds(speed)
     increment = wpm_to_seconds(args.increment)
@@ -487,16 +446,11 @@ def set_args():
 
 set_args()
 
+story_number = 0
+data = get_text(story_number)
+text = data["text"]
 
-_, extension = os.path.splitext(file_name)
-if extension[-3:] == "pdf":
-    mode = "pdf"
-    text = textract.process(file_name).splitlines()
-else:
-    with open(file_name) as f:
-        text = f.readlines()
-
-app = QApplication(list(sys.argv[0]))
+app = QApplication(sys.argv)
 
 main_window = MainWindow()
 main_window.show()

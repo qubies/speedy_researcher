@@ -1,5 +1,3 @@
 pyqt5==5.15.1
 textract==1.6.3
-keras==2.4.3
-bert-extractive-summarizer==0.5.1
-torch==1.7.0
+requests
