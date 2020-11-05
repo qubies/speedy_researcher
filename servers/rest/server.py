@@ -2,13 +2,22 @@ from flask import Flask, request
 import os
 import re
 import json
+import sys
+
+
+STORY_PATH = os.getenv("STORY_PATH")
+print(f"Story Path: {STORY_PATH}", file=sys.stderr)
 
 app = Flask(__name__)
 
-stories = [
-    {"text": ["zero", "zero", "zero"], "spans": [[1, 10, 11]]},
-    {"text": "one", "spans": [[1, 10, 11]]},
-]
+stories = []
+for story in os.listdir(STORY_PATH):
+    if story.endswith(".json"):
+        with open(os.path.join(STORY_PATH, story)) as f:
+            stories.append(json.load(f))
+for line in stories[0]["story"]:
+    print(line.strip("\n"))
+print(stories[0]["questions"])
 
 
 @app.route("/text")

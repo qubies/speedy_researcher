@@ -4,6 +4,4 @@ RUN mkdir /app
 ADD ./requirements.txt /app/requirements.txt
 workdir /app
 RUN pip3 install -r requirements.txt
-RUN python3 -m spacy download en_core_web_sm
 CMD python3 server.py
-

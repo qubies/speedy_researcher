@@ -16,7 +16,7 @@ import json
 ## server
 PORT = 4969
 IP = "34.83.200.130"
-#  IP = "localhost"
+IP_fallback = "localhost"
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 # STATE
@@ -47,7 +47,13 @@ class span:
         self.char_end = end
 
     def inside(self, line, char):
-        return line == line and char >= self.char_start and char < self.char_end
+        return line == self.line and char >= self.char_start and char < self.char_end
+
+    def __str__(self):
+        return f"line: {self.line}, char_start: {self.char_start}, char_end: {self.char_end}"
+
+    def __repr__(self):
+        return self.__str__()
 
 
 # read in the word frequency file
@@ -64,8 +70,21 @@ def is_common(words):
 
 
 def get_text(number):
+    global text, data
+
     PARAMS = {"user": USER, "storyNumber": number}
-    return requests.get(url=f"http://{IP}:{PORT}/text", params=PARAMS).json()
+    try:
+        data = requests.get(url=f"http://{IP}:{PORT}/text", params=PARAMS).json()
+    except:
+        try:
+            data = requests.get(
+                url=f"http://{IP_fallback}:{PORT}/text", params=PARAMS
+            ).json()
+        except:
+            print("Server cannot be contacted, please check to make sure its running")
+            exit(2)
+    text = data["story"]
+    return
 
 
 def wpm_calc(t, num_words):
@@ -130,16 +149,15 @@ class update(QRunnable):
     def __init__(self, data, main_window):
         self.main_window = main_window
         super(update, self).__init__()
-        self.text = data["text"]
+        self.text = text
         self.AI_Spans = [span(x, y, z) for x, y, z in data["spans"]]
         threading.Thread.__init__(self)
         self.run = False
 
     def is_ai(self, line, char):
-        if line in self.AI_Spans:
-            for span in self.AI_Spans[line]:
-                if span.inside(line, char):
-                    return True
+        for span in self.AI_Spans:
+            if span.inside(line, char):
+                return True
         return False
 
     def highlight_string(self, current_text, pos):
@@ -217,7 +235,7 @@ class update(QRunnable):
             line_position += 1
         t.done_reading()
         if USER != "":
-            t.record_result("a", 5, 5)
+            t.record_result(text, 5, 5)
         #  t.record_result(4, 5)
         #  t.record_result(3, 5)
         self.main_window.close()
@@ -447,8 +465,7 @@ def set_args():
 set_args()
 
 story_number = 0
-data = get_text(story_number)
-text = data["text"]
+get_text(story_number)
 
 app = QApplication(sys.argv)
 
