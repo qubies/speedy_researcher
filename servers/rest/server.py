@@ -24,6 +24,8 @@ def text():
     try:
         user = request.args["user"]
         story_number = int(request.args["storyNumber"])
+        if story_number >= len(stories):
+            return json.dumps("DONE")
         return json.dumps(stories[story_number])
 
     except Exception as e:

@@ -13,6 +13,8 @@ from PyQt5.QtCore import *
 import requests
 import json
 
+sys.settrace
+
 ## server
 PORT = 4969
 IP = "34.83.200.130"
@@ -105,7 +107,6 @@ class Timing:
             print(rec)
             wpm_w += rec.wpm_ci * weight
         self.wpm_w = wpm_w / sum(weights)
-        print(f"wpm_w: {self.wpm_w:.2f}")
 
     def reset(self):
         self.start = time.perf_counter()
@@ -150,7 +151,7 @@ class State:
         self.text = None
         self.data = None
         self.common_words = set()
-        self.max_stories = 5
+        self.max_stories = 4
         for line in open("client/data/english_word_frequencies.txt"):
             self.common_words.add(line.split()[0])
 
@@ -163,6 +164,7 @@ class State:
 
     def get_next_data(self):
         with self.state_lock:
+            self.story_number += 1
             PARAMS = {"user": self.user, "storyNumber": self.story_number}
             try:
                 self.data = requests.get(
@@ -180,12 +182,13 @@ class State:
                     exit(2)
             self.text = self.data["story"]
             self.AI_Spans = [span(x, y, z) for x, y, z in self.data["spans"]]
-            self.text_name = self.data.story_name
+            self.text_name = self.data["story_name"]
+            self.line_position = 0
 
     def set_user(self, user):
         with self.state_lock:
             self.user = user
-            self.story_number = 0
+            self.story_number = -1
         self.get_next_data()
 
     def get_next_story(self):
@@ -325,6 +328,7 @@ class present_story(QRunnable):
         t = Timing("test")
 
         for x in range(state.max_stories):
+            t.reset()
             with state.present_lock:
                 while state.line_position < len(state.text) and not state.is_dead():
                     raw_text = state.get_line()
@@ -347,9 +351,9 @@ class present_story(QRunnable):
                             time.sleep(pause_time)
                         state.incr_line()
             t.done_reading()
-            state.stop_present()
             # this is where we present the test
-            t.record_result(state.text, 5, 5)
+            t.record_result(5, 5)
+            state.get_next_data()
         self.main_window.close()
 
 
