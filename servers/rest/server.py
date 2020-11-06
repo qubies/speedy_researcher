@@ -14,10 +14,9 @@ stories = []
 for story in os.listdir(STORY_PATH):
     if story.endswith(".json"):
         with open(os.path.join(STORY_PATH, story)) as f:
-            stories.append(json.load(f))
-for line in stories[0]["story"]:
-    print(line.strip("\n"))
-print(stories[0]["questions"])
+            o = json.load(f)
+            o["story_name"] = story
+            stories.append(o)
 
 
 @app.route("/text")
@@ -25,6 +24,8 @@ def text():
     try:
         user = request.args["user"]
         story_number = int(request.args["storyNumber"])
+        if story_number >= len(stories):
+            return json.dumps("DONE")
         return json.dumps(stories[story_number])
 
     except Exception as e:
