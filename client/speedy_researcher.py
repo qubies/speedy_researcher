@@ -107,6 +107,7 @@ class Timing:
             print(rec)
             wpm_w += rec.wpm_ci * weight
         self.wpm_w = wpm_w / sum(weights)
+        print(f"Weighted wpm: {self.wpm_w}")
 
     def reset(self):
         self.start = time.perf_counter()
