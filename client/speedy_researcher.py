@@ -352,6 +352,7 @@ class present_story(QRunnable):
                 state.kill()
                 self.main_window.close()
                 return
+            time.sleep(1)  ## trying to get out of segfault.. lol...
 
         state.kill()
         self.main_window.close()
