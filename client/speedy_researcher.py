@@ -151,7 +151,6 @@ class State:
         self.text = None
         self.data = None
         self.common_words = set()
-        self.max_stories = 4
         for line in open("client/data/english_word_frequencies.txt"):
             self.common_words.add(line.split()[0])
 
@@ -186,20 +185,14 @@ class State:
             self.AI_Spans = [span(x, y, z) for x, y, z in self.data["spans"]]
             self.text_name = self.data["story_name"]
             self.line_position = 0
+            print(len(self.text))
             return True
 
     def set_user(self, user):
         with self.state_lock:
             self.user = user
-            self.story_number = -1
+            self.story_number = 1
         self.get_next_data()
-
-    def get_next_story(self):
-        with self.state_lock:
-            self.story_number += 1
-            if self.story_number >= self.max_stories:
-                print("DONE")
-                self.kill()
 
     def incr_speed(self):
         with self.state_lock:
@@ -330,11 +323,12 @@ class present_story(QRunnable):
 
         t = Timing("test")
 
-        for x in range(state.max_stories):
+        while True:
             t.reset()
             with state.present_lock:
                 while state.line_position < len(state.text) and not state.is_dead():
                     raw_text = state.get_line()
+                    print(raw_text)
                     words = raw_text.split()
                     for i in range(0, len(words), state.group_size):
                         with state.paused_lock:
@@ -352,13 +346,14 @@ class present_story(QRunnable):
                             self.main_window.read.setText(word)
                             pause_time = state.get_pause_time(word_group, i)
                             time.sleep(pause_time)
-                        state.incr_line()
+                    state.incr_line()
             t.done_reading()
             # this is where we present the test
             t.record_result(5, 5)
             if not state.get_next_data():
                 state.kill()
                 self.main_window.close()
+                return
 
         state.kill()
         self.main_window.close()
