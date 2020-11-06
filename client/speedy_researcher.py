@@ -180,10 +180,13 @@ class State:
                         "Server cannot be contacted, please check to make sure its running"
                     )
                     exit(2)
+            if self.data == "DONE":
+                return False
             self.text = self.data["story"]
             self.AI_Spans = [span(x, y, z) for x, y, z in self.data["spans"]]
             self.text_name = self.data["story_name"]
             self.line_position = 0
+            return True
 
     def set_user(self, user):
         with self.state_lock:
@@ -353,7 +356,11 @@ class present_story(QRunnable):
             t.done_reading()
             # this is where we present the test
             t.record_result(5, 5)
-            state.get_next_data()
+            if not state.get_next_data():
+                state.kill()
+                self.main_window.close()
+
+        state.kill()
         self.main_window.close()
 
 
