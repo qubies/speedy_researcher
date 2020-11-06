@@ -1,59 +1,120 @@
 {
     "story": [
-        "Name: _____________________________\n",
-        "\n",
-        "Nonfiction Reading TestCarnivorous PlantsDirections: Read the following passage and answer the questions that follow. Refer to the text to checkyour answers when appropriate.Imagine that you're a fly. You're just zippingaround the sky, looking for a place to rest, whenyou see nice pink leaf. That looks like a nice placeto land. You think to yourself in your fly head. Asyou rest your feet on the leaf, you noticesomething strange. This leaf is hairy. You begin tomake your move, but you trigger the plant's reflex.Snap! In one-tenth of a second, you are caught inthe Venus flytrap. You will be digested in five totwelve days. Welcome to the world of carnivorousplants!There are over a quarter of a millions plantspecies. Only 600 or so are carnivorous. We callthem this because they attract, trap, and eat bugs.Like other plants, they get energy from the sun.But unlike other plants, they get their nutrientsfrom their prey. Carnivorous plants live in bogsand places where the soil lacks nutrients. Mostplants get nutrients from the soil. Carnivorousplants have turned to other sources.The snap of the Venus flytrap is not the only waythat plants eat bugs. Pitcher plants trick their preyinto landing on them. They offer nectar bribes tothe foolish insects that would take them. True totheir name, pitcher plants have deep chambers.Their landing surface is slippery. They haveinward pointing hairs, making it hard to escape.The fly lands on the pitcher plant to eat, but slipsinto a pit filled with digestive fluids and is eaten.Then there're sundews. We call them sundewsbecause they sparkle in the sun as if covered inmorning dew. Of course, that sparkle is fromsomething much more treacherous. It is a sweetgoo called mucilage that bugs can't resist.Sundews create mucilage to attract bugs. As theyfly in to eat, bugs become trapped in the veryobject of their desire. They soon exhaustthemselves by trying to escape the mucilage. Orthe sundew's tentacles, which respond to prey bycurling around them, smother them. Bugs usuallydie in about 15 minutes. Then the plant dissolvesits prey in enzymes and absorbs the nutrients.\n",
-        "\n",
-        "Have you ever walked into trouble and found thatyou couldn't get out? So has every insect that hasever wandered into a corkscrew plant. Bugs loveto investigate plants for nectar and food.Corkscrew plants have inviting stems. Curvedhairs line the inside of these stems. These hairsallow insects to go up the stems, but not back.Going forward leads a chamber filled withdigestive fluid, the plant's stomach. Bugs whowander into the corkscrew plant find that they areunable to escape. They must march to their owndemise.And then there are the bladderworts. They're aboutas nice as they sound. They live in water and floatnear the surface. Their traps are like small bladdershidden beneath the water. Only their flowers arevisible from the surface. When bugs swim into thetrigger hairs, the plant reacts. A trapdoor in thebladder opens up. The bladder sucks up the preyand the water surrounding it. A tenth of a secondlater, the bladder shuts again. The plant hastrapped the prey. It releases digestive fluids. Theprey will be digested within hours.Carnivorous plants might sound tough, but theyare difficult to keep at home. They are built tosurvive in places that other plants cannot. Thisspecialization comes at a cost. They have a hardtime adapting to other environments. Theirstrengths become weaknesses in rich soil. Theydepend on the harsh yet delicate environments inwhich they thrive. They are not so hardy after all.Still, there's something to be said about the powerof life when one finds a plant that can survive inbarren soil.\n",
-        "\n",
-        "\f"
+        "Name: _____________________________\n\nNonfiction Reading Test Carnivorous Plants Directions: Read the following passage and answer the questions that follow. ",
+        "Refer to the text to check your answers when appropriate.",
+        "\nImagine that you're a fly. ",
+        "You're just zipping around the sky, looking for a place to rest, when you see nice pink leaf. ",
+        "That looks like a nice place to land. ",
+        "You think to yourself in your fly head. ",
+        "As you rest your feet on the leaf, you notice something strange. ",
+        "This leaf is hairy. ",
+        "You begin to make your move, but you trigger the plant's reflex.",
+        "\nSnap! ",
+        "In one-tenth of a second, you are caught in the Venus flytrap. ",
+        "You will be digested in five to twelve days. ",
+        "Welcome to the world of carnivorous plants!",
+        "\nThere are over a quarter of a millions plant species. ",
+        "Only 600 or so are carnivorous. ",
+        "We call them this because they attract, trap, and eat bugs.",
+        "\nLike other plants, they get energy from the sun.",
+        "\nBut unlike other plants, they get their nutrients from their prey. ",
+        "Carnivorous plants live in bogs and places where the soil lacks nutrients. ",
+        "Most plants get nutrients from the soil. ",
+        "Carnivorous plants have turned to other sources.",
+        "\nThe snap of the Venus flytrap is not the only way that plants eat bugs. ",
+        "Pitcher plants trick their prey into landing on them. ",
+        "They offer nectar bribes to the foolish insects that would take them. ",
+        "True to their name, pitcher plants have deep chambers.",
+        "\nTheir landing surface is slippery. ",
+        "They have inward pointing hairs, making it hard to escape.",
+        "\nThe fly lands on the pitcher plant to eat, but slips into a pit filled with digestive fluids and is eaten.",
+        "\nThen there're sundews. ",
+        "We call them sundews because they sparkle in the sun as if covered in morning dew. ",
+        "Of course, that sparkle is from something much more treacherous. ",
+        "It is a sweet goo called mucilage that bugs can't resist.",
+        "\nSundews create mucilage to attract bugs. ",
+        "As they fly in to eat, bugs become trapped in the very object of their desire. ",
+        "They soon exhaust themselves by trying to escape the mucilage. ",
+        "Or the sundew's tentacles, which respond to prey by curling around them, smother them. ",
+        "Bugs usually die in about 15 minutes. ",
+        "Then the plant dissolves its prey in enzymes and absorbs the nutrients.",
+        "\n\nHave you ever walked into trouble and found that you couldn't get out? ",
+        "So has every insect that has ever wandered into a corkscrew plant. ",
+        "Bugs love to investigate plants for nectar and food.",
+        "\nCorkscrew plants have inviting stems. ",
+        "Curved hairs line the inside of these stems. ",
+        "These hairs allow insects to go up the stems, but not back.",
+        "\nGoing forward leads a chamber filled with digestive fluid, the plant's stomach. ",
+        "Bugs who wander into the corkscrew plant find that they are unable to escape. ",
+        "They must march to their own demise.",
+        "\nAnd then there are the bladderworts. ",
+        "They're about as nice as they sound. ",
+        "They live in water and float near the surface. ",
+        "Their traps are like small bladders hidden beneath the water. ",
+        "Only their flowers are visible from the surface. ",
+        "When bugs swim into the trigger hairs, the plant reacts. ",
+        "A trapdoor in the bladder opens up. ",
+        "The bladder sucks up the prey and the water surrounding it. ",
+        "A tenth of a second later, the bladder shuts again. ",
+        "The plant has trapped the prey. ",
+        "It releases digestive fluids. ",
+        "The prey will be digested within hours.",
+        "\nCarnivorous plants might sound tough, but they are difficult to keep at home. ",
+        "They are built to survive in places that other plants cannot. ",
+        "This specialization comes at a cost. ",
+        "They have a hard time adapting to other environments. ",
+        "Their strengths become weaknesses in rich soil. ",
+        "They depend on the harsh yet delicate environments in which they thrive. ",
+        "They are not so hardy after all.",
+        "\nStill, there's something to be said about the power of life when one finds a plant that can survive in barren soil.",
+        "\n\n\f"
     ],
     "spans": [
         [
             0,
             0,
-            154
+            158
         ],
         [
-            11,
+            6,
             0,
-            43
+            64
+        ],
+        [
+            15,
+            0,
+            59
         ],
         [
             20,
             0,
-            70
+            48
         ],
         [
-            21,
+            38,
+            4,
+            73
+        ],
+        [
+            45,
             0,
-            52
+            77
         ],
         [
-            32,
+            62,
             0,
-            76
+            53
         ],
         [
-            37,
-            2,
-            70
-        ],
-        [
-            43,
-            0,
-            78
-        ],
-        [
-            50,
+            63,
             0,
             47
         ],
         [
-            59,
-            0,
-            60
+            66,
+            2,
+            117
         ]
     ],
-    "questions": "[{\"q_text\": \"Which statement would the author most likely agree with?\", \"a.\": \" There are too many species of carnivorous plants.\", \"b.\": \" There are too few plant species in the world.\", \"c.\": \" Only a small number of plants are carnivorous.\", \"d.\": \" A majority of plants are carnivorous.\"}, {\"q_text\": \"Which plant traps bugs in its stem and forces them to walk forward?\\n\\n\\n\\n\", \"a.\": \" Corkscrew plants\", \"b.\": \" Sundews\", \"c.\": \" Bladderworts\", \"d.\": \" Pitcher plants\"}, {\"q_text\": \"Which of the following statements is false?\", \"a.\": \" Carnivorous plants get their energy from eating bugs.\", \"b.\": \" Carnivorous plants do not get nutrients from the soil.\", \"c.\": \" Carnivorous plants get their energy from the sun.\", \"d.\": \" Carnivorous plants get their nutrients from eating bugs.\"}, {\"q_text\": \"Which event happens last when a sundew eats a meal?\", \"a.\": \" The sundew creates mucilage.\", \"b.\": \" The sundew's tentacles curl in response to the prey.\", \"c.\": \" The bug is attracted to the mucilage.\", \"d.\": \" The sundew releases enzymes.\"}, {\"q_text\": \"Which best expresses the main idea of the third paragraph?\", \"a.\": \" There are more types of carnivorous plants than the Venus fly trap.\", \"b.\": \" The pitcher plant tricks bugs into falling into its stomach.\", \"c.\": \" The Venus flytrap kills its prey in a various ways.\", \"d.\": \" Some plants attract bugs by offering them nectar.\"}, {\"q_text\": \"Which best defines the word treacherous as it is used in the fourth paragraph?\\n\\n\\n\\n\", \"a.\": \" Something that provides nutrients.\", \"b.\": \" Something that is very bright.\", \"c.\": \" Something that tastes delicious.\", \"d.\": \" Something that has a hidden danger.\"}, {\"q_text\": \"Which best describes the overall text structure of the second paragraph?\\n\\n\\n\\n\", \"a.\": \" Chronological order\", \"b.\": \" Compare and contrast\", \"c.\": \" Sequential order\", \"d.\": \" Spatial\"}, {\"q_text\": \"Which statement would the author most likely disagree with?\\n\", \"a.\": \" Carnivorous plants cannot thrive in rich soil.\", \"b.\": \" Bladderworts react quickly when their trigger hairs are bumped.\", \"c.\": \" Carnivorous plants are tough and can live in any environment.\", \"d.\": \" Bladderworts hide their traps just below the surface of the water.\"}, {\"q_text\": \"Which best expresses the main idea of the last paragraph?\", \"a.\": \" Carnivorous plants are not hard to take care of because they feed themselves.\", \"b.\": \" Carnivorous plants are delicate because they need certain conditions to survive.\", \"c.\": \" Carnivorous plants are difficult to keep at home, but you should keep trying.\", \"d.\": \" Carnivorous plants are inspirational and they are interesting to watch and own.\"}, {\"q_text\": \"Which title best expresses the author's main purpose in writing this text?\\nLong Response\\n\", \"a.\": \" Watch Out! How To Avoid Being Eaten by Carnivorous Plants\", \"b.\": \" At Risk: How You Can Help to Preserve Carnivorous Plants\", \"c.\": \" Venus Flytrap: Nature's Most Beautiful and Dangerous Plant\", \"d.\": \" Fatal Flowers: Plants That Kill Insects\"}]"
+    "questions": "[{\"q_num\": \"1\", \"q_text\": \"Which statement would the author most likely agree with?\", \"answer\": \"c\", \"a.\": \" There are too many species of carnivorous plants.\", \"b.\": \" There are too few plant species in the world.\", \"c.\": \" Only a small number of plants are carnivorous.\", \"d.\": \" A majority of plants are carnivorous.\"}, {\"q_num\": \"2\", \"q_text\": \"Which plant traps bugs in its stem and forces them to walk forward?\\n\\n\\n\\n\", \"answer\": \"a\", \"a.\": \" Corkscrew plants\", \"b.\": \" Sundews\", \"c.\": \" Bladderworts\", \"d.\": \" Pitcher plants\"}, {\"q_num\": \"3\", \"q_text\": \"Which of the following statements is false?\", \"answer\": \"a\", \"a.\": \" Carnivorous plants get their energy from eating bugs.\", \"b.\": \" Carnivorous plants do not get nutrients from the soil.\", \"c.\": \" Carnivorous plants get their energy from the sun.\", \"d.\": \" Carnivorous plants get their nutrients from eating bugs.\"}, {\"q_num\": \"4\", \"q_text\": \"Which event happens last when a sundew eats a meal?\", \"answer\": \"d\", \"a.\": \" The sundew creates mucilage.\", \"b.\": \" The sundew's tentacles curl in response to the prey.\", \"c.\": \" The bug is attracted to the mucilage.\", \"d.\": \" The sundew releases enzymes.\"}, {\"q_num\": \"8\", \"q_text\": \"Which statement would the author most likely disagree with?\\n\", \"answer\": \"c\", \"a.\": \" Carnivorous plants cannot thrive in rich soil.\", \"b.\": \" Bladderworts react quickly when their trigger hairs are bumped.\", \"c.\": \" Carnivorous plants are tough and can live in any environment.\", \"d.\": \" Bladderworts hide their traps just below the surface of the water.\"}, {\"q_num\": \"10\", \"q_text\": \"Which title best expresses the author's main purpose in writing this text?\\nLong Response\\n\", \"answer\": \"d\", \"a.\": \" Watch Out! How To Avoid Being Eaten by Carnivorous Plants\", \"b.\": \" At Risk: How You Can Help to Preserve Carnivorous Plants\", \"c.\": \" Venus Flytrap: Nature's Most Beautiful and Dangerous Plant\", \"d.\": \" Fatal Flowers: Plants That Kill Insects\"}]"
 }

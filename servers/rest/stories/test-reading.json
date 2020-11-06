@@ -1,0 +1,87 @@
+{
+    "story": [
+        "Name: _____________________________\n\nNonfiction Reading Test Reading Directions: Read the following passage and answer the questions that follow. ",
+        "Refer to the text to check your answers when appropriate.",
+        "\nDid you know that some people don't do their reading assignments? ",
+        "It's shocking, but it's true. ",
+        "Some students don't even read short texts that they are assigned in class. ",
+        "There are many reasons for this. ",
+        "They may be distracted or bored. ",
+        "They may be unwilling to focus. ",
+        "They may be unconfident readers. ",
+        "Whatever the reason, it has to stop today. ",
+        "Here's why.",
+        "\nReading stimulates your mind. ",
+        "It is like a workout for your brain. ",
+        "When people get old,\ntheir muscles begin to deteriorate. ",
+        "They get weaker and their strength leaves them.",
+        "\nExercise can prevent this loss. ",
+        "The same thing happens to people's brains when they get older.",
+        "\nBrain power and speed decline with age.",
+        "\nReading strengthens your brain and prevents these declines.",
+        "\n\nDo not just discount a text because it is unfamiliar to you. ",
+        "Each time you read, you are exposed to new ideas and perspectives.",
+        "\nReading can change the way that you understand the world. ",
+        "It can give you a broader perspective on things. ",
+        "It can make you worldlier. ",
+        "You can learn how people live in far away places. ",
+        "You can learn about cultures different from your own.",
+        "\n\nYou can benefit from reading in the near-term too. ",
+        "Reading provides knowledge. ",
+        "Knowledge is power. ",
+        "Therefore, reading can make you a more powerful person. ",
+        "You can learn to do new things by reading. ",
+        "Do you want to make video games? ",
+        "Do you want to design clothing?",
+        "\nReading can teach you all this and more. ",
+        "But you have to get good at reading, and the only way to get good at something is to practice.",
+        "\n\nReading is good for your state of mind. ",
+        "It has a calming effect. ",
+        "It can lower your stress levels and help you relax. ",
+        "You can escape from your troubles for a moment when you read, and it's a positive escape. ",
+        "The benefits of reading far outweigh those of acting like a doofus. ",
+        "So do yourself a favor: the next time you get a reading assignment, take as much as you can from it. ",
+        "Squeeze it for every drop of knowledge that it contains. ",
+        "Then move on to the next one.",
+        "\n\nRead everything that you can at school,\nregardless of whether you find it interesting.",
+        "\nReading expands your vocabulary. ",
+        "Even a\n\"boring\" text can teach you new words.",
+        "\nHaving a larger vocabulary will help you better express yourself. ",
+        "You will be able to speak, write, and think more intelligently.",
+        "\nWhat's boring about that?",
+        "\n\n\f"
+    ],
+    "spans": [
+        [
+            0,
+            0,
+            147
+        ],
+        [
+            21,
+            2,
+            59
+        ],
+        [
+            25,
+            0,
+            53
+        ],
+        [
+            40,
+            0,
+            100
+        ],
+        [
+            41,
+            0,
+            56
+        ],
+        [
+            45,
+            0,
+            46
+        ]
+    ],
+    "questions": "[{\"q_num\": \"2\", \"q_text\": \"Why does the author think that you should read books that are boring?\", \"answer\": \"d\", \"a.\": \" You will eventually grow to love them if you read them enough.\", \"b.\": \" You will get better grades in reading class.\", \"c.\": \" You will make your teacher very happy.\", \"d.\": \" You will learn new words.\"}, {\"q_num\": \"4\", \"q_text\": \"Which is not a reason given by the author why students fail to complete reading assignments?\", \"answer\": \"d\", \"a.\": \" Students may be bored.\", \"b.\": \" Students may be distracted.\", \"c.\": \" Students may be unwilling to focus.\", \"d.\": \" Students may be tired.\"}, {\"q_num\": \"5\", \"q_text\": \"Which best expresses the author's main purpose in writing this text?\", \"answer\": \"a\", \"a.\": \" He is trying to persuade students to do their reading work.\", \"b.\": \" He is teaching people how to become better readers.\", \"c.\": \" He is explaining why people don't do their reading work.\", \"d.\": \" He is entertaining readers with facts about the mind and body.\"}, {\"q_num\": \"6\", \"q_text\": \"Which best describes the author's tone in the first three sentences?\", \"answer\": \"b\", \"a.\": \" Surprised\", \"b.\": \" Sarcastic\", \"c.\": \" Informative\", \"d.\": \" Irate\"}, {\"q_num\": \"7\", \"q_text\": \"Which of the following is not one of the author's main points?\", \"answer\": \"c\", \"a.\": \" Reading broadens your perspective and makes you a better person.\", \"b.\": \" Reading is a relaxing activity with positive mental side effects.\", \"c.\": \" Reading helps you perform on tests and get into selective schools.\", \"d.\": \" Reading keeps your mind in shape and prevents losses due to age.\"}, {\"q_num\": \"9\", \"q_text\": \"Why does the author believe that reading is good for your mind state?\", \"answer\": \"d\", \"a.\": \" It has a calming effect.\", \"b.\": \" It can lower your stress levels.\", \"c.\": \" It can help you relax.\", \"d.\": \" All of these\"}, {\"q_num\": \"10\", \"q_text\": \"Which title best expresses the main idea of this text?\\n\", \"answer\": \"a\", \"a.\": \" Reading: Good for the Mind in Many Ways\", \"b.\": \" Reading: The Key to a Successful Academic Future\", \"c.\": \" Reading: Improve Your Vocabulary While Being Entertained\", \"d.\": \" Reading: The Best Way to Improve Your Writing Skills\"}]"
+}

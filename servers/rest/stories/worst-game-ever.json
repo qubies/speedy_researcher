@@ -1,35 +1,68 @@
 {
     "story": [
-        "Name: _____________________________\n",
-        "\n",
-        "Nonfiction Reading Comprehension Test 6Worst Game Ever?Directions: Read the following passage and answer the questions that follow. Refer to the text to checkyour answers when appropriate.E.T. the Extra-Terrestrial is a video game that came out for the Atari 2600 game system in 1982. It wasbased on a very popular film of the same name. It cost over 125 million dollars to make. Starprogrammer Howard Scott Warshaw created it with consultation from Steven Spielberg. And it iswidely considered to be one of the worst video games ever created. The massive failure of E.T. and itseffects on Atari is an often-mentioned reason for the video game industry crash of 1983.It was July 27th, 1982. Howard Scott Warshaw was hot off the success of his most recent game, Raidersof the Lost Ark. He received a call from Atari C.E.O. Ray Kassar. Atari had bought the rights to make avideo game version of Spielberg's movie, E.T. the Extra-Terrestrial, which had just been released inJune. Kassar told Warshaw that Spielberg had specifically asked for Warshaw to make the game.Warshaw was honored, but there was one huge problem. Atari needed the game finished by September1st in order to start selling it during the Christmas season.It had taken Warshaw six months to create Raiders of the Lost Ark. The game he made prior to that tookhim seven months. He was expected to create E.T. in around five weeks. Warshaw just did not haveenough time to program the game properly, but he accepted the challenge anyway and production began.Spielberg wanted Warshaw to create a simple maze game, similar to Pac-Man, but Warshaw had abigger vision. He wanted players to explore different environments in a 3D world. Warshaw followedhis vision.Atari anticipated that the game would be a huge success. Usually companies like Atari have people testgames before releasing them. If there is something that testers really dislike, programmers can fix itbefore the public gets a chance to play. Atari decided to skip testing due to time limitations. Theywanted the game released during the holiday season. It was: E.T. was released in December of 1982.The game sold very well at first. It was a hot holiday item. Unfortunately, Atari overestimated howmany they would sell. They made 5 million copies and they only sold "
+        "Name: _____________________________\n\nNonfiction Reading Comprehension Test 6 Worst Game Ever?",
+        "\nDirections: Read the following passage and answer the questions that follow. ",
+        "Refer to the text to check your answers when appropriate.",
+        "\nE.T. the Extra-Terrestrial is a video game that came out for the Atari 2600 game system in 1982. ",
+        "It was based on a very popular film of the same name. ",
+        "It cost over 125 million dollars to make. ",
+        "Star programmer Howard Scott Warshaw created it with consultation from Steven Spielberg. ",
+        "And it is widely considered to be one of the worst video games ever created. ",
+        "The massive failure of E.T. and its effects on Atari is an often-mentioned reason for the video game industry crash of 1983.",
+        "\nIt was July 27th, 1982. ",
+        "Howard Scott Warshaw was hot off the success of his most recent game, Raiders of the Lost Ark. He received a call from Atari C.E.O. Ray Kassar. ",
+        "Atari had bought the rights to make a video game version of Spielberg's movie, E.T. the Extra-Terrestrial, which had just been released in June. ",
+        "Kassar told Warshaw that Spielberg had specifically asked for Warshaw to make the game.",
+        "\nWarshaw was honored, but there was one huge problem. ",
+        "Atari needed the game finished by September 1st in order to start selling it during the Christmas season.",
+        "\nIt had taken Warshaw six months to create Raiders of the Lost Ark. The game he made prior to that took him seven months. ",
+        "He was expected to create E.T. in around five weeks. ",
+        "Warshaw just did not have enough time to program the game properly, but he accepted the challenge anyway and production began.",
+        "\nSpielberg wanted Warshaw to create a simple maze game, similar to Pac-Man, but Warshaw had a bigger vision. ",
+        "He wanted players to explore different environments in a 3D world. ",
+        "Warshaw followed his vision.",
+        "\nAtari anticipated that the game would be a huge success. ",
+        "Usually companies like Atari have people test games before releasing them. ",
+        "If there is something that testers really dislike, programmers can fix it before the public gets a chance to play. ",
+        "Atari decided to skip testing due to time limitations. ",
+        "They wanted the game released during the holiday season. ",
+        "It was: E.T. was released in December of 1982.",
+        "\nThe game sold very well at first. ",
+        "It was a hot holiday item. ",
+        "Unfortunately, Atari overestimated how many they would sell. ",
+        "They made 5 million copies and they only sold "
     ],
     "spans": [
         [
-            7,
             0,
-            146
+            0,
+            94
         ],
         [
-            10,
+            12,
             0,
             87
         ],
         [
-            13,
-            0,
-            119
+            18,
+            2,
+            109
         ],
         [
-            16,
-            0,
-            106
+            21,
+            2,
+            58
         ],
         [
-            27,
+            22,
+            0,
+            74
+        ],
+        [
+            30,
             0,
             45
         ]
     ],
-    "questions": "[{\"q_text\": \"Which of the following is not a reason for the failure of E.T. the Extra-Terrestrial?\", \"a.\": \" The programmer was not given enough time to finish the game properly.\", \"b.\": \" Atari did not test the game before its release.\", \"c.\": \" Atari made too many copies of E.T. the Extra-Terrestrial.\", \"d.\": \" The game was released on a new system that only a small number of people owned.\"}, {\"q_text\": \"Which of the following were effects of the failure of E.T the Extra-Terrestrial?\", \"a.\": \" Perhaps a million or more copies of the game were buried in the desert.\", \"b.\": \" Atari lost over $100 million.\", \"c.\": \" The video game industry sunk into a deep depression.\", \"d.\": \" All of the above\"}, {\"q_text\": \"Which of the following was not listed as a reason why E.T. the Extra-Terrestrial was considered one of theworst games ever?\\n\", \"a.\": \" The soundtrack was annoying.\", \"b.\": \" The graphics were bad.\", \"c.\": \" A short time limit made the game frustrating.\", \"d.\": \" Players would get stuck in holes.\"}, {\"q_text\": \"Which of the following events happened first?\", \"a.\": \" E.T. the Extra-Terrestrial video game was released to the public.\", \"b.\": \" The entire video game industry sank into a deep decline.\", \"c.\": \" Steven Spielberg suggested that the E.T. video game should be like Pac-Man.\", \"d.\": \" Atari buried millions of cartridges and game consoles in the New Mexico desert.\"}, {\"q_text\": \"Who programmed E.T. the Extra-Terrestrial?\\n\\n\", \"a.\": \" Steven Spielberg\", \"c.\": \" Howard Scott Warshaw\", \"b.\": \" Ray Kassar\", \"d.\": \" Elliot Thomas\"}, {\"q_text\": \"Why did Atari decide to skip testing E.T. the Extra-Terrestrial?\", \"a.\": \" Testing was too expensive.\", \"b.\": \" Spielberg would not allow testing.\", \"c.\": \" They were in a hurry to release the game for the holiday season.\", \"d.\": \" Testing video games was not common until after E.T. the Extra-Terrestrial was released.\"}, {\"q_text\": \"When was the game E.T. the Extra-Terrestrial released?\", \"a.\": \" June 1982\", \"b.\": \" September 1982\", \"c.\": \" December 1982\", \"d.\": \" September 1983\"}, {\"q_text\": \"According to the text, which group of people would like playing E.T.?\", \"a.\": \" People who really enjoyed watching the movie\", \"b.\": \" People who liked playing fast, fun games\", \"c.\": \" People who stuck with the game despite its flaws\", \"d.\": \" People who enjoyed playing Raiders of the Lost Ark\"}, {\"q_text\": \"Which of the following statements is true?\", \"a.\": \" E.T. the Extra-Terrestrial was one of the worst selling games of all time.\", \"b.\": \" E.T. the Extra-Terrestrial sold a lot fewer copies than Atari was hoping it would.\", \"c.\": \" E.T. the Extra-Terrestrial was one of the best selling video games of all time despite its flaws.\", \"d.\": \" Every copy of E.T. the Extra-Terrestrial ever sold was eventually returned.\"}]"
+    "questions": "[{\"q_num\": \"1\", \"q_text\": \"Which of the following is not a reason for the failure of E.T. the Extra-Terrestrial?\", \"answer\": \"d\", \"a.\": \" The programmer was not given enough time to finish the game properly.\", \"b.\": \" Atari did not test the game before its release.\", \"c.\": \" Atari made too many copies of E.T. the Extra-Terrestrial.\", \"d.\": \" The game was released on a new system that only a small number of people owned.\"}, {\"q_num\": \"2\", \"q_text\": \"Which of the following were effects of the failure of E.T the Extra-Terrestrial?\", \"answer\": \"d\", \"a.\": \" Perhaps a million or more copies of the game were buried in the desert.\", \"b.\": \" Atari lost over $100 million.\", \"c.\": \" The video game industry sunk into a deep depression.\", \"d.\": \" All of the above\"}, {\"q_num\": \"3\", \"q_text\": \"Which of the following was not listed as a reason why E.T. the Extra-Terrestrial was considered one of theworst games ever?\\n\", \"answer\": \"a\", \"a.\": \" The soundtrack was annoying.\", \"b.\": \" The graphics were bad.\", \"c.\": \" A short time limit made the game frustrating.\", \"d.\": \" Players would get stuck in holes.\"}, {\"q_num\": \"4\", \"q_text\": \"Which of the following events happened first?\", \"answer\": \"c\", \"a.\": \" E.T. the Extra-Terrestrial video game was released to the public.\", \"b.\": \" The entire video game industry sank into a deep decline.\", \"c.\": \" Steven Spielberg suggested that the E.T. video game should be like Pac-Man.\", \"d.\": \" Atari buried millions of cartridges and game consoles in the New Mexico desert.\"}, {\"q_num\": \"5\", \"q_text\": \"Who programmed E.T. the Extra-Terrestrial?\\n\\n\", \"answer\": \"c\", \"a.\": \" Steven Spielberg\", \"c.\": \" Howard Scott Warshaw\", \"b.\": \" Ray Kassar\", \"d.\": \" Elliot Thomas\"}, {\"q_num\": \"6\", \"q_text\": \"Why did Atari decide to skip testing E.T. the Extra-Terrestrial?\", \"answer\": \"c\", \"a.\": \" Testing was too expensive.\", \"b.\": \" Spielberg would not allow testing.\", \"c.\": \" They were in a hurry to release the game for the holiday season.\", \"d.\": \" Testing video games was not common until after E.T. the Extra-Terrestrial was released.\"}, {\"q_num\": \"7\", \"q_text\": \"When was the game E.T. the Extra-Terrestrial released?\", \"answer\": \"c\", \"a.\": \" June 1982\", \"b.\": \" September 1982\", \"c.\": \" December 1982\", \"d.\": \" September 1983\"}, {\"q_num\": \"8\", \"q_text\": \"According to the text, which group of people would like playing E.T.?\", \"answer\": \"c\", \"a.\": \" People who really enjoyed watching the movie\", \"b.\": \" People who liked playing fast, fun games\", \"c.\": \" People who stuck with the game despite its flaws\", \"d.\": \" People who enjoyed playing Raiders of the Lost Ark\"}, {\"q_num\": \"9\", \"q_text\": \"Which of the following statements is true?\", \"answer\": \"b\", \"a.\": \" E.T. the Extra-Terrestrial was one of the worst selling games of all time.\", \"b.\": \" E.T. the Extra-Terrestrial sold a lot fewer copies than Atari was hoping it would.\", \"c.\": \" E.T. the Extra-Terrestrial was one of the best selling video games of all time despite its flaws.\", \"d.\": \" Every copy of E.T. the Extra-Terrestrial ever sold was eventually returned.\"}]"
 }
